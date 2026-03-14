@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - ProServe</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body{ background:#f4f6fb; }
+        .box{
+            max-width:650px;
+            background:white;
+            padding:30px;
+            margin:auto;
+            border-radius:12px;
+            box-shadow:0 8px 18px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-primary px-4">
+    <a href="index.html" class="navbar-brand fw-bold">ProServe</a>
+</nav>
+
+<div class="container my-5">
+    <div class="box">
+
+        <h3 class="fw-bold mb-3">Edit Profile</h3>
+
+        <label class="form-label">Full Name</label>
+        <input class="form-control mb-3" value="Ankit Kumar">
+
+        <label class="form-label">Email</label>
+        <input class="form-control mb-3" value="mestar719@gmail.com">
+
+        <label class="form-label">Phone</label>
+        <input class="form-control mb-3" value="+91 9876543210">
+
+        <label class="form-label">City</label>
+        <input class="form-control mb-3" value="Delhi">
+
+        <div class="d-flex justify-content-between">
+            <a href="user-profile.html" class="btn btn-secondary">Cancel</a>
+            <button class="btn btn-primary">Save Changes</button>
+        </div>
+
+    </div>
+</div>
+
+<script src="/js/api.js"></script>
+
+
+</body>
+</html>

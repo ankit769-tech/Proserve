@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - ProServe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{ background:#f4f7fb; }
+        .search-box{
+            background:white;
+            padding:20px;
+            border-radius:12px;
+            box-shadow:0 8px 18px rgba(0,0,0,0.08);
+        }
+        .result-card{
+            background:white;
+            border-radius:12px;
+            padding:20px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.1);
+            margin-bottom:20px;
+        }
+        .rating span{
+            color:#ffb400;
+            font-size:18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-primary px-4">
+    <a href="index.html" class="navbar-brand fw-bold">ProServe</a>
+</nav>
+
+<div class="container my-4">
+
+    <!-- SEARCH & FILTER BOX -->
+    <div class="search-box">
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Search services... e.g. Electrician, Plumber">
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select">
+                    <option>Sort by Price</option>
+                    <option>Low to High</option>
+                    <option>High to Low</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select class="form-select">
+                    <option>Rating</option>
+                    <option>4★ & above</option>
+                    <option>3★ & above</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RESULTS -->
+    <h4 class="fw-bold mt-4">Search Results</h4>
+
+    <!-- CARD 1 -->
+    <div class="result-card">
+
+        <h5 class="fw-bold">Ramesh Kumar — Electrician</h5>
+        <p class="text-muted">4 years experience</p>
+
+        <div class="rating mb-2">
+            <span>★ ★ ★ ★ ☆</span> <span class="text-muted">4.2</span>
+        </div>
+
+        <p><strong>Service:</strong> Fan Repair</p>
+        <p><strong>Price:</strong> ₹300</p>
+
+        <button class="btn btn-primary">View Details</button>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="result-card">
+
+        <h5 class="fw-bold">Suresh — Plumber</h5>
+        <p class="text-muted">6 years experience</p>
+
+        <div class="rating mb-2">
+            <span>★ ★ ★ ★ ★</span> <span class="text-muted">4.8</span>
+        </div>
+
+        <p><strong>Service:</strong> Pipe Fix</p>
+        <p><strong>Price:</strong> ₹450</p>
+
+        <button class="btn btn-primary">View Details</button>
+    </div>
+
+</div>
+
+<script src="/js/api.js"></script>
+
+
+</body>
+</html>

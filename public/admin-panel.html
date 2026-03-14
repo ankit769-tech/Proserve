@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Panel - ProServe</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background:#f4f6fb; }
+    .sidebar {
+      height:100vh; background:#0d6efd; color:#fff; padding:24px 18px;
+      position:sticky; top:0;
+    }
+    .sidebar .nav-link { color:rgba(255,255,255,0.95); }
+    .sidebar .nav-link.active { background:rgba(255,255,255,0.12); border-radius:8px; }
+    .card-compact { padding:18px; border-radius:12px; box-shadow:0 6px 18px rgba(13,110,253,0.06); background:#fff; }
+    .small-muted { font-size:0.85rem; color:#6b7280; }
+    .table-actions button { margin-right:6px; }
+    .badge-status { font-size:0.80rem; padding:6px 8px; border-radius:8px; }
+    /* responsive tweaks */
+    @media (max-width: 767px) {
+      .sidebar { height:auto; position:relative; padding-bottom:10px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid">
+  <div class="row g-0">
+
+    <!-- SIDEBAR -->
+    <aside class="col-md-2 sidebar">
+      <h3 class="mb-3 fw-bold">ProServe — Admin</h3>
+      <nav class="nav flex-column">
+        <a class="nav-link active" href="#" data-view="dashboard">Dashboard</a>
+        <a class="nav-link" href="#" data-view="users">Manage Users</a>
+        <a class="nav-link" href="#" data-view="workers">Manage Workers</a>
+        <a class="nav-link" href="#" data-view="services">Services</a>
+        <a class="nav-link" href="#" data-view="bookings">Bookings</a>
+        <a class="nav-link" href="#" data-view="transactions">Transactions</a>
+        <a class="nav-link" href="#" data-view="complaints">Complaints</a>
+        <div class="mt-4 small-muted">Signed in as <strong>admin@proserve</strong></div>
+        <a class="nav-link text-warning mt-3" href="index.html">Logout</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="col-md-10 p-4">
+
+      <!-- DASHBOARD -->
+      <section id="view-dashboard" class="view">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="mb-0">Admin Dashboard</h2>
+          <small class="text-muted">Overview & quick actions</small>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="card-compact">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="small-muted">Total Users</div>
+                  <h4 id="stat-users">1,248</h4>
+                </div>
+                <div><i class="bi bi-people" style="font-size:28px;color:#0d6efd"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card-compact">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="small-muted">Active Workers</div>
+                  <h4 id="stat-workers">372</h4>
+                </div>
+                <div><i class="bi bi-briefcase" style="font-size:28px;color:#0d6efd"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card-compact">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="small-muted">Bookings Today</div>
+                  <h4 id="stat-bookings">54</h4>
+                </div>
+                <div><i class="bi bi-calendar-event" style="font-size:28px;color:#0d6efd"></i></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card-compact">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="small-muted">Revenue (Mo.)</div>
+                  <h4 id="stat-revenue">₹ 2,18,500</h4>
+                </div>
+                <div><i class="bi bi-currency-rupee" style="font-size:28px;color:#0d6efd"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- quick tables preview -->
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card shadow-sm p-3">
+              <div class="d-flex justify-content-between mb-2">
+                <h6 class="mb-0">Recent Bookings</h6>
+                <small class="small-muted">Latest 6</small>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr><th>Booking</th><th>Customer</th><th>Status</th></tr>
+                  </thead>
+                  <tbody id="dashboard-bookings-preview">
+                    <!-- filled by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card shadow-sm p-3">
+              <div class="d-flex justify-content-between mb-2">
+                <h6 class="mb-0">Pending Worker Approvals</h6>
+                <small class="small-muted">Actions</small>
+              </div>
+              <div id="dashboard-workers-preview">
+                <!-- filled by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MANAGE USERS -->
+      <section id="view-users" class="view" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="mb-0">Manage Users</h2>
+          <div class="input-group w-50">
+            <input id="search-users" class="form-control" placeholder="Search by name / phone / email">
+            <button class="btn btn-outline-secondary" onclick="filterUsers()">Search</button>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="table-users">
+                <thead>
+                  <tr><th>Name</th><th>Contact</th><th>Registered</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                  <!-- filled by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MANAGE WORKERS -->
+      <section id="view-workers" class="view" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="mb-0">Manage Workers</h2>
+          <div>
+            <button class="btn btn-primary me-2" onclick="bulkApprove()">Approve Selected</button>
+            <button class="btn btn-danger" onclick="bulkReject()">Reject Selected</button>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="table-workers">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="workers-select-all" /></th>
+                    <th>Name</th><th>Skill</th><th>Experience</th><th>Docs</th><th>Status</th><th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- filled by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section id="view-services" class="view" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="mb-0">Manage Services</h2>
+          <div>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalService">+ Add Service</button>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="table-services">
+                <thead>
+                  <tr><th>Title</th><th>Category</th><th>Base Price</th><th>Time</th><th>Action</th></tr>
+                </thead>
+                <tbody><!-- filled by JS --></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BOOKINGS -->
+      <section id="view-bookings" class="view" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="mb-0">Bookings Management</h2>
+          <small class="small-muted">Change status, cancel or reassign</small>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="table-bookings">
+                <thead>
+                  <tr><th>Booking ID</th><th>Customer</th><th>Worker</th><th>Service</th><th>Date</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody><!-- filled by JS --></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSACTIONS -->
+      <section id="view-transactions" class="view" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="mb-0">Transactions</h2>
+          <small class="small-muted">View payouts, refunds and logs</small>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover" id="table-transactions">
+                <thead>
+                  <tr><th>Tx ID</th><th>Date</th><th>Type</th><th>Amount</th><th>Status</th><th>Action</th></tr>
+                </thead>
+                <tbody><!-- filled by JS --></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPLAINTS -->
+      <section id="view-complaints" class="view" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="mb-0">Complaints & Support</h2>
+          <small class="small-muted">Resolve user issues</small>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-body" id="complaints-list">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+</div>
+
+<!-- Service Modal -->
+<div class="modal fade" id="modalService" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form id="form-service" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add / Edit Service</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="service-id" />
+        <div class="mb-3">
+          <label class="form-label">Service Title</label>
+          <input id="service-title" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Category</label>
+          <input id="service-category" class="form-control" required />
+        </div>
+        <div class="mb-3 row">
+          <div class="col">
+            <label class="form-label">Price (₹)</label>
+            <input id="service-price" class="form-control" required type="number" min="0" />
+          </div>
+          <div class="col">
+            <label class="form-label">Time (mins)</label>
+            <input id="service-time" class="form-control" required type="number" min="0" />
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea id="service-desc" class="form-control"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal fade" id="modalConfirm" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center p-4">
+        <p id="confirm-text" class="mb-3"></p>
+        <div class="d-flex justify-content-center gap-2">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button id="confirm-yes" class="btn btn-danger">Yes, proceed</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS & icons -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Icons (Bootstrap icons CDN) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<script>
+    
+/* -------------------------
+   Sample data (in-memory)
+   ------------------------- */
+const users = [
+  { id:1, name:'Amit Verma', contact:'amit@example.com', reg:'2024-02-10', status:'active' },
+  { id:2, name:'Sneha Roy', contact:'sneha@example.com', reg:'2024-04-21', status:'blocked' },
+  { id:3, name:'Rahul Mehta', contact:'rahul@example.com', reg:'2025-01-12', status:'active' },
+];
+
+const workers = [
+  { id:101, name:'Ramesh Kumar', skill:'Electrician', exp:'4 yrs', docs:true, status:'approved' },
+  { id:102, name:'Suresh Patel', skill:'Plumber', exp:'2 yrs', docs:true, status:'pending' },
+  { id:103, name:'Meena Devi', skill:'Carpenter', exp:'6 yrs', docs:false, status:'rejected' },
+];
+
+const services = [
+  { id:201, title:'Fan Repair', category:'Electrician', price:300, time:45, desc:'Fan motor / wiring' },
+  { id:202, title:'Switch Board Fix', category:'Electrician', price:250, time:30, desc:'Replace switch / wiring' }
+];
+
+const bookings = [
+  { id:'B-1001', customer:'Amit Verma', worker:'Ramesh Kumar', service:'Fan Repair', date:'2025-11-25 17:00', status:'requested' },
+  { id:'B-1002', customer:'Priya Sharma', worker:'Suresh Patel', service:'Tap Fix', date:'2025-11-26 10:00', status:'accepted' },
+];
+
+const transactions = [
+  { id:'T-9001', date:'2025-11-23', type:'Payment', amount:500, status:'paid' },
+  { id:'T-9002', date:'2025-11-22', type:'Payout', amount:300, status:'paid' },
+];
+
+const complaints = [
+  { id:'C-3001', from:'Priya Sharma', about:'Late arrival', text:'Provider arrived 40 mins late', status:'open' },
+  { id:'C-3002', from:'Amit Verma', about:'Quality issue', text:'Issue not fixed properly', status:'resolved' },
+];
+
+/* -------------------------
+   Renderers
+   ------------------------- */
+
+function renderDashboardPreviews() {
+  const bp = document.getElementById('dashboard-bookings-preview');
+  bp.innerHTML = bookings.slice(0,6).map(b => `
+    <tr>
+      <td>${b.id}</td>
+      <td>${b.customer}</td>
+      <td><span class="badge bg-${b.status === 'requested' ? 'warning' : (b.status === 'accepted' ? 'success' : 'secondary')} badge-status">${b.status}</span></td>
+    </tr>
+  `).join('');
+
+  const wp = document.getElementById('dashboard-workers-preview');
+  const pending = workers.filter(w => w.status === 'pending');
+
+  if (!pending.length) {
+    wp.innerHTML = '<div class="small-muted">No pending approvals</div>';
+  } else {
+    wp.innerHTML = pending.map(w => `
+      <div class="d-flex align-items-center justify-content-between p-2 border rounded mb-2">
+        <div>
+          <div class="fw-bold">${w.name}</div>
+          <div class="small-muted">${w.skill} • ${w.exp}</div>
+        </div>
+        <div>
+          <button class="btn btn-sm btn-success" onclick="approveWorker(${w.id})">Approve</button>
+          <button class="btn btn-sm btn-danger" onclick="rejectWorker(${w.id})">Reject</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function renderUsers() {
+  const tbody = document.querySelector('#table-users tbody');
+  tbody.innerHTML = users.map(u => `
+    <tr id="user-row-${u.id}">
+      <td>${u.name}</td>
+      <td>${u.contact}</td>
+      <td>${u.reg}</td>
+      <td><span class="badge ${u.status === 'active' ? 'bg-success' : 'bg-danger'}">${u.status}</span></td>
+      <td class="table-actions">
+        <button class="btn btn-sm btn-outline-primary" onclick="viewUser(${u.id})">View</button>
+        <button class="btn btn-sm ${u.status==='active' ? 'btn-warning' : 'btn-success'}" onclick="toggleBlockUser(${u.id})">${u.status==='active' ? 'Block' : 'Unblock'}</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderWorkers() {
+  const tbody = document.querySelector('#table-workers tbody');
+  tbody.innerHTML = workers.map(w => `
+    <tr id="worker-row-${w.id}">
+      <td><input type="checkbox" data-id="${w.id}" /></td>
+      <td>${w.name}</td>
+      <td>${w.skill}</td>
+      <td>${w.exp}</td>
+      <td>${w.docs ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-secondary">No</span>'}</td>
+      <td><span class="badge ${
+        w.status==='approved' ? 'bg-success' :
+        w.status==='pending'  ? 'bg-warning' :
+        'bg-danger'
+      }">${w.status}</span></td>
+
+      <td>
+        <button class="btn btn-sm btn-outline-primary" onclick="viewWorker(${w.id})">View</button>
+        ${w.status === 'pending' ? `<button class="btn btn-sm btn-success" onclick="approveWorker(${w.id})">Approve</button>` : ''}
+        <button class="btn btn-sm btn-danger" onclick="rejectWorker(${w.id})">Reject</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderServices() {
+  const tbody = document.querySelector('#table-services tbody');
+  tbody.innerHTML = services.map(s => `
+    <tr id="service-row-${s.id}">
+      <td>${s.title}</td>
+      <td>${s.category}</td>
+      <td>₹ ${s.price}</td>
+      <td>${s.time} min</td>
+      <td>
+        <button class="btn btn-sm btn-outline-secondary" onclick="editService(${s.id})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteService(${s.id})">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderBookings() {
+  const tbody = document.querySelector('#table-bookings tbody');
+  tbody.innerHTML = bookings.map(b => `
+    <tr id="booking-row-${b.id}">
+      <td>${b.id}</td>
+      <td>${b.customer}</td>
+      <td>${b.worker}</td>
+      <td>${b.service}</td>
+      <td>${b.date}</td>
+      <td><span class="badge ${
+        b.status==='requested' ? 'bg-warning' :
+        b.status==='accepted' ? 'bg-success' :
+        b.status==='completed' ? 'bg-primary' :
+        'bg-secondary'
+      }">${b.status}</span></td>
+
+      <td>
+        <select class="form-select form-select-sm" onchange="updateBookingStatus('${b.id}', this.value)">
+          <option value="">Change status</option>
+          <option value="accepted">Accept</option>
+          <option value="in-progress">In Progress</option>
+          <option value="completed">Complete</option>
+          <option value="cancelled">Cancel</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderTransactions() {
+  const tbody = document.querySelector('#table-transactions tbody');
+  tbody.innerHTML = transactions.map(t => `
+    <tr id="tx-row-${t.id}">
+      <td>${t.id}</td>
+      <td>${t.date}</td>
+      <td>${t.type}</td>
+      <td>₹ ${t.amount}</td>
+      <td><span class="badge ${t.status==='paid' ? 'bg-success' : 'bg-secondary'}">${t.status}</span></td>
+      <td><button class="btn btn-sm btn-outline-danger" onclick="refundTx('${t.id}')">Refund</button></td>
+    </tr>
+  `).join('');
+}
+
+function renderComplaints() {
+  const box = document.getElementById('complaints-list');
+  box.innerHTML = complaints.map(c => `
+    <div class="d-flex align-items-start gap-3 mb-3 p-3 border rounded">
+      <div><i class="bi bi-exclamation-circle-fill" style="font-size:20px;color:#dc3545"></i></div>
+      <div class="flex-grow-1">
+        <div class="d-flex justify-content-between">
+          <div><strong>${c.from}</strong> — ${c.about}</div>
+          <div><span class="badge ${c.status==='open' ? 'bg-warning' : 'bg-success'}">${c.status}</span></div>
+        </div>
+        <p class="mb-1 small-muted">${c.text}</p>
+        <div>
+          <button class="btn btn-sm btn-outline-primary" onclick="viewComplaint('${c.id}')">View</button>
+          ${c.status==='open' ? `<button class="btn btn-sm btn-success" onclick="resolveComplaint('${c.id}')">Resolve</button>` : ''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* -------------------------
+   Actions
+   ------------------------- */
+
+function viewUser(id) {
+  const u = users.find(x=>x.id===id);
+  alert(
+`User: ${u.name}
+Contact: ${u.contact}
+Registered: ${u.reg}
+Status: ${u.status}`);
+}
+
+function toggleBlockUser(id) {
+  const idx = users.findIndex(x=>x.id===id);
+  users[idx].status = users[idx].status === 'active' ? 'blocked' : 'active';
+  renderUsers();
+  renderDashboardPreviews();
+}
+
+function viewWorker(id) {
+  const w = workers.find(x=>x.id===id);
+  alert(
+`Worker: ${w.name}
+Skill: ${w.skill}
+Experience: ${w.exp}
+Docs: ${w.docs ? 'Yes' : 'No'}
+Status: ${w.status}`);
+}
+
+function approveWorker(id) {
+  const idx = workers.findIndex(x=>x.id===id);
+  if (idx>=0) workers[idx].status = 'approved';
+  renderWorkers();
+  renderDashboardPreviews();
+}
+
+function rejectWorker(id) {
+  const idx = workers.findIndex(x=>x.id===id);
+  if (idx>=0) workers[idx].status = 'rejected';
+  renderWorkers();
+  renderDashboardPreviews();
+}
+
+function bulkApprove() {
+  document.querySelectorAll('#table-workers tbody input[type="checkbox"]:checked')
+    .forEach(cb => {
+      const id = Number(cb.dataset.id);
+      const w = workers.find(x=>x.id===id);
+      if (w) w.status = 'approved';
+    });
+  renderWorkers(); renderDashboardPreviews();
+}
+
+function bulkReject() {
+  document.querySelectorAll('#table-workers tbody input[type="checkbox"]:checked')
+    .forEach(cb => {
+      const id = Number(cb.dataset.id);
+      const w = workers.find(x=>x.id===id);
+      if (w) w.status = 'rejected';
+    });
+  renderWorkers(); renderDashboardPreviews();
+}
+
+function editService(id) {
+  const s = services.find(x=>x.id===id);
+  document.getElementById('service-id').value = s.id;
+  document.getElementById('service-title').value = s.title;
+  document.getElementById('service-category').value = s.category;
+  document.getElementById('service-price').value = s.price;
+  document.getElementById('service-time').value = s.time;
+  document.getElementById('service-desc').value = s.desc;
+  new bootstrap.Modal(document.getElementById('modalService')).show();
+}
+
+function deleteService(id) {
+  showConfirm(`Delete service ${id}?`, () => {
+    const idx = services.findIndex(x=>x.id===id);
+    if (idx>=0) services.splice(idx,1);
+    renderServices();
+  });
+}
+
+function updateBookingStatus(id, status) {
+  if (!status) return;
+  const idx = bookings.findIndex(b=>b.id===id);
+  if (idx>=0) bookings[idx].status = status;
+  renderBookings(); renderDashboardPreviews();
+}
+
+function refundTx(id) {
+  showConfirm(`Issue refund for ${id}?`, () => {
+    const tx = transactions.find(t=>t.id===id);
+    if (tx) tx.status = 'refunded';
+    renderTransactions();
+  });
+}
+
+function viewComplaint(id) {
+  const c = complaints.find(x=>x.id===id);
+  alert(
+`${c.id}
+From: ${c.from}
+About: ${c.about}
+
+${c.text}
+
+Status: ${c.status}`);
+}
+
+function resolveComplaint(id) {
+  showConfirm(`Mark complaint ${id} as resolved?`, () => {
+    const c = complaints.find(x=>x.id===id);
+    if (c) c.status='resolved';
+    renderComplaints();
+  });
+}
+
+/* -------------------------
+   Service Modal submit
+   ------------------------- */
+document.getElementById('form-service').addEventListener('submit', function(e){
+  e.preventDefault();
+  const id = Number(document.getElementById('service-id').value);
+  const title = document.getElementById('service-title').value;
+  const category = document.getElementById('service-category').value;
+  const price = Number(document.getElementById('service-price').value);
+  const time = Number(document.getElementById('service-time').value);
+  const desc = document.getElementById('service-desc').value;
+
+  if (id) {
+    const s = services.find(x=>x.id===id);
+    s.title=title; s.category=category; s.price=price; s.time=time; s.desc=desc;
+  } else {
+    const nid = Math.max(0,...services.map(s=>s.id))+1;
+    services.push({ id:nid, title, category, price, time, desc });
+  }
+
+  bootstrap.Modal.getInstance(document.getElementById('modalService')).hide();
+  renderServices();
+});
+
+/* -------------------------
+   Confirm helper
+   ------------------------- */
+function showConfirm(text, onYes) {
+  document.getElementById('confirm-text').innerText = text;
+  const modal = new bootstrap.Modal(document.getElementById('modalConfirm'));
+  const yesBtn = document.getElementById('confirm-yes');
+
+  const handler = () => { onYes(); modal.hide(); yesBtn.removeEventListener('click', handler); };
+  yesBtn.addEventListener('click', handler);
+  modal.show();
+}
+
+/* -------------------------
+   Search/filter
+   ------------------------- */
+function filterUsers() {
+  const q = document.getElementById('search-users').value.trim().toLowerCase();
+  const tbody = document.querySelector('#table-users tbody');
+
+  const rows = users.filter(u => 
+    (u.name + " " + u.contact).toLowerCase().includes(q)
+  );
+
+  tbody.innerHTML = rows.map(u => `
+    <tr id="user-row-${u.id}">
+      <td>${u.name}</td>
+      <td>${u.contact}</td>
+      <td>${u.reg}</td>
+      <td><span class="badge ${u.status === 'active' ? 'bg-success' : 'bg-danger'}">${u.status}</span></td>
+      <td class="table-actions">
+        <button class="btn btn-sm btn-outline-primary" onclick="viewUser(${u.id})">View</button>
+        <button class="btn btn-sm ${u.status==='active' ? 'btn-warning' : 'btn-success'}" onclick="toggleBlockUser(${u.id})">${u.status==='active' ? 'Block' : 'Unblock'}</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* -------------------------
+   Navigation
+   ------------------------- */
+document.querySelectorAll('.sidebar .nav-link').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.querySelectorAll('.sidebar .nav-link').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    const v = a.dataset.view;
+    document.querySelectorAll('main .view').forEach(s => s.style.display = 'none');
+    document.getElementById('view-' + v).style.display = 'block';
+  });
+});
+
+/* -------------------------
+   Initial render
+   ------------------------- */
+function init() {
+  renderDashboardPreviews();
+  renderUsers();
+  renderWorkers();
+  renderServices();
+  renderBookings();
+  renderTransactions();
+  renderComplaints();
+}
+
+init();
+</script>
+
+<script src="/js/api.js"></script>
+
+
+</body>
+</html>

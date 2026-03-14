@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Worker Dashboard - ProServe</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --primary-light: #e9f1ff;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body { 
+            background: #f3f6fb; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Navbar */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        /* Worker Header */
+        .worker-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #0a58ca 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(13, 110, 253, 0.2);
+        }
+
+        .worker-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .worker-photo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .worker-details h3 {
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .worker-details p {
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .stat-card h4 {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .stat-card p {
+            color: #64748b;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Menu Cards */
+        .menu-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .menu-card {
+            background: white;
+            padding: 25px 15px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            height: 100%;
+            border-top: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+            border-top-color: var(--primary);
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #0a58ca);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .menu-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .menu-icon {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .menu-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .menu-description {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin: 0;
+        }
+
+        /* Badges for notifications */
+        .notification-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Today's Jobs Preview */
+        .jobs-preview {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .job-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .job-item:last-child {
+            border-bottom: none;
+        }
+
+        .job-time {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            min-width: 80px;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        .job-details h6 {
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .job-details p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .job-status {
+            margin-left: auto;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .status-confirmed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Earnings Chart Placeholder */
+        .earnings-chart {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .chart-placeholder {
+            height: 150px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .worker-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .worker-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4 py-3">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="fas fa-tools me-2"></i>ProServe Worker
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="worker-todays-jobs.html">
+                            <i class="fas fa-calendar-day me-1"></i> Today's Jobs
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="chat-advanced.html">
+                            <i class="fas fa-comments me-1"></i> Messages
+                            <span class="badge bg-danger ms-1">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i> Ramesh
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user-circle me-2"></i> My Profile</a></li>
+                            <li><a class="dropdown-item" href="worker-earnings.html"><i class="fas fa-wallet me-2"></i> Earnings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+
+        <!-- Worker Header -->
+        <div class="worker-header">
+            <div class="worker-info">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80" class="worker-photo">
+                <div class="worker-details">
+                    <h3>Ramesh Kumar</h3>
+                    <p><i class="fas fa-bolt me-1"></i> Electrician • 4 years experience</p>
+                    <div class="status-badge">
+                        <i class="fas fa-circle" style="color: #22c55e; font-size: 0.7rem;"></i>
+                        Online & Available
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <div class="row g-4">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-calendar-day"></i></div>
+                        <h4>12</h4>
+                        <p>Today's Jobs</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-wallet"></i></div>
+                        <h4>₹8,240</h4>
+                        <p>This Month</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-star"></i></div>
+                        <h4>4.8</h4>
+                        <p>Customer Rating</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="icon"><i class="fas fa-clock"></i></div>
+                        <h4>92%</h4>
+                        <p>On-time Completion</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-lg-8">
+                <!-- Today's Jobs Preview -->
+                <div class="jobs-preview">
+                    <div class="section-title">
+                        <i class="fas fa-calendar-day"></i>
+                        Today's Schedule
+                        <a href="worker-todays-jobs.html" class="ms-auto view-all" style="font-size: 0.9rem;">View All <i class="fas fa-chevron-right ms-1"></i></a>
+                    </div>
+                    
+                    <div class="job-item">
+                        <div class="job-time">9:00 AM</div>
+                        <div class="job-details">
+                            <h6>Fan Repair</h6>
+                            <p>Rajesh Sharma • 2km away</p>
+                        </div>
+                        <div class="job-status status-confirmed">Confirmed</div>
+                    </div>
+                    
+                    <div class="job-item">
+                        <div class="job-time">11:30 AM</div>
+                        <div class="job-details">
+                            <h6>Switchboard Installation</h6>
+                            <p>Priya Singh • 5km away</p>
+                        </div>
+                        <div class="job-status status-confirmed">Confirmed</div>
+                    </div>
+                    
+                    <div class="job-item">
+                        <div class="job-time">2:00 PM</div>
+                        <div class="job-details">
+                            <h6>Wiring Checkup</h6>
+                            <p>Anil Verma • 3km away</p>
+                        </div>
+                        <div class="job-status status-pending">Pending</div>
+                    </div>
+                    
+                    <div class="job-item">
+                        <div class="job-time">4:30 PM</div>
+                        <div class="job-details">
+                            <h6>Light Fixture Installation</h6>
+                            <p>Sunita Patel • 4km away</p>
+                        </div>
+                        <div class="job-status status-confirmed">Confirmed</div>
+                    </div>
+                </div>
+
+                <!-- Earnings Chart -->
+                <div class="earnings-chart">
+                    <div class="section-title">
+                        <i class="fas fa-chart-line"></i>
+                        Weekly Earnings
+                    </div>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-bar me-2"></i> Earnings Chart Will Appear Here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-lg-4">
+                <!-- Quick Actions -->
+                <div class="menu-section">
+                    <div class="section-title">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <a href="worker-job-request-details.html" class="text-decoration-none">
+                                <div class="menu-card">
+                                    <div class="menu-icon"><i class="fas fa-list-check"></i></div>
+                                    <div class="menu-title">Job Requests</div>
+                                    <div class="menu-description">New service requests</div>
+                                    <span class="notification-badge">5</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="worker-availability.html" class="text-decoration-none">
+                                <div class="menu-card">
+                                    <div class="menu-icon"><i class="fas fa-toggle-on"></i></div>
+                                    <div class="menu-title">Update Status</div>
+                                    <div class="menu-description">Set availability</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="chat-advanced.html" class="text-decoration-none">
+                                <div class="menu-card">
+                                    <div class="menu-icon"><i class="fas fa-comments"></i></div>
+                                    <div class="menu-title">Messages</div>
+                                    <div class="menu-description">Chat with clients</div>
+                                    <span class="notification-badge">3</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="worker-notifications.html" class="text-decoration-none">
+                                <div class="menu-card">
+                                    <div class="menu-icon"><i class="fas fa-bell"></i></div>
+                                    <div class="menu-title">Notifications</div>
+                                    <div class="menu-description">Alerts & updates</div>
+                                    <span class="notification-badge">7</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="menu-section">
+                    <div class="section-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Performance
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <a href="reviews.html" class="text-decoration-none">
+                                <div class="menu-card">
+                                    <div class="menu-icon"><i class="fas fa-star"></i></div>
+                                    <div class="menu-title">Customer Reviews</div>
+                                    <div class="menu-description">4.8/5 from 142 reviews</div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <a href="worker-history.html" class="text-decoration-none">
+                                <div class="menu-card">
+                                    <div class="menu-icon"><i class="fas fa-history"></i></div>
+                                    <div class="menu-title">Job History</div>
+                                    <div class="menu-description">Past 30 days: 64 jobs</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account & Tools Section --> 
+         <!-- Account & Tools Section -->
+        <div class="menu-section">
+            <div class="section-title">
+                <i class="fas fa-user-cog"></i>
+                Account & Tools
+            </div>
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <a href="profile.html" class="text-decoration-none">
+                        <div class="menu-card">
+                            <div class="menu-icon"><i class="fas fa-user-edit"></i></div>
+                            <div class="menu-title">My Profile</div>
+                            <div class="menu-description">Edit personal info</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="worker-bank.html" class="text-decoration-none">
+                        <div class="menu-card">
+                            <div class="menu-icon"><i class="fas fa-landmark"></i></div>
+                            <div class="menu-title">Bank & Withdraw</div>
+                            <div class="menu-description">Manage earnings</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="worker-verification.html" class="text-decoration-none">
+                        <div class="menu-card">
+                            <div class="menu-icon"><i class="fas fa-id-card"></i></div>
+                            <div class="menu-title">Verification</div>
+                            <div class="menu-description">ID & documents</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a href="worker-support.html" class="text-decoration-none">
+                        <div class="menu-card">
+                            <div class="menu-icon"><i class="fas fa-headset"></i></div>
+                            <div class="menu-title">Support</div>
+                            <div class="menu-description">Help & assistance</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Simple script to update online status
+        function updateOnlineStatus() {
+            const statusElement = document.querySelector('.status-badge');
+            const isOnline = Math.random() > 0.1; // 90% chance of being online
+            
+            if (isOnline) {
+                statusElement.innerHTML = '<i class="fas fa-circle" style="color: #22c55e; font-size: 0.7rem;"></i> Online & Available';
+                statusElement.style.background = 'rgba(255, 255, 255, 0.2)';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-circle" style="color: #ef4444; font-size: 0.7rem;"></i> Offline';
+                statusElement.style.background = 'rgba(239, 68, 68, 0.2)';
+            }
+        }
+        
+        // Update status every 30 seconds (simulation)
+        setInterval(updateOnlineStatus, 30000);
+        
+        // Initialize
+        updateOnlineStatus();
+        
+    </script>
+    
+</body>
+</html>

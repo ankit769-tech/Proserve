@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProServe - Login</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Fade-In Animation */
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Slide-Up Animation */
+        .slide-up {
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Hover Up Animation */
+        .hover-up:hover {
+            transform: translateY(-6px);
+            transition: 0.3s;
+        }
+
+        /* Button Hover Animation */
+        .btn-animate {
+            transition: 0.3s;
+        }
+
+        .btn-animate:hover {
+            transform: scale(1.05);
+        }
+
+        /* Glow Effect */
+        .glow:hover {
+            box-shadow: 0 0 20px rgba(13,110,253,0.6);
+        }
+
+        body {
+            background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216')
+                        center/cover no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .glass-box {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.23);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        input {
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glass-box fade-in">
+        <h3 class="text-center fw-bold mb-4 text-white">Login</h3>
+
+        <!-- Added IDs -->
+        <input id="loginEmail" type="text" class="form-control mb-3" placeholder="Email">
+        <input id="loginPassword" type="password" class="form-control mb-3" placeholder="Password">
+
+        <button onclick="handleLogin()" class="btn btn-primary w-100 mb-3 rounded-pill btn-animate glow">
+            Login
+        </button>
+
+        <p class="text-center text-white">
+            New user?
+            <a href="signup.html" class="text-warning">Create an account</a>
+        </p>
+    </div>
+
+    <script>
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                // Save token + user in localStorage
+                if (data.token) {
+                    localStorage.setItem('ps_token', data.token);
+                }
+                if (data.user) {
+                    localStorage.setItem('ps_user', JSON.stringify(data.user));
+                    localStorage.setItem('ps_name', data.user.name || '');
+                }
+
+                // Redirect based on role
+                const role = data.user?.role || 'customer';
+                if (role === 'worker') {
+                    window.location.href = 'dashboard-worker.html';
+                } else {
+                    window.location.href = 'user-dashboard.html';
+                }
+
+            } catch (err) {
+                alert('Login failed: ' + err.message);
+            }
+        }
+    </script>
+
+</body>
+</html>

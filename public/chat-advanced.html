@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Chat - ProServe</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+    --primary: #0d6efd;
+    --primary-light: #e9f1ff;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark: #1e293b;
+    --light: #f8fafc;
+}
+
+body { 
+    background: #eef1f5; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.chat-container {
+    display: flex;
+    height: 90vh;
+    max-width: 1200px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* LEFT: Chat List */
+.chat-list {
+    width: 35%;
+    border-right: 1px solid #e2e8f0;
+    background: #fafbfe;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-list-header {
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: white;
+}
+
+.chat-search {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+}
+
+.chat-list-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 0;
+}
+
+.chat-list-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.chat-list-item:hover {
+    background: #f1f5f9;
+}
+
+.chat-list-item.active {
+    background: var(--primary-light);
+    border-left-color: var(--primary);
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid #e2e8f0;
+}
+
+.chat-info {
+    flex: 1;
+}
+
+.chat-info h6 {
+    margin: 0 0 4px;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.chat-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-meta {
+    text-align: right;
+}
+
+.chat-time {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-bottom: 5px;
+}
+
+.unread-badge {
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.status-online {
+    background: var(--success);
+}
+
+.status-offline {
+    background: #94a3b8;
+}
+
+.status-away {
+    background: var(--warning);
+}
+
+/* RIGHT: Chat Area */
+.chat-area {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+}
+
+/* Header */
+.chat-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat-user-info {
+    display: flex;
+    align-items: center;
+}
+
+.chat-user-info img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.chat-user-details h5 {
+    margin: 0;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+.chat-user-details p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-actions button {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+
+.chat-actions button:hover {
+    color: var(--primary);
+}
+
+/* Messages */
+.chat-body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    max-width: 70%;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.message.user {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.message.worker {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.message-bubble {
+    padding: 12px 16px;
+    border-radius: 18px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.message.user .message-bubble {
+    background: var(--primary);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message.worker .message-bubble {
+    background: white;
+    color: var(--dark);
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+.message-status {
+    font-size: 0.7rem;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.message.user .message-status {
+    color: var(--primary);
+}
+
+.message-image {
+    max-width: 250px;
+    border-radius: 12px;
+    margin-bottom: 5px;
+}
+
+.message-file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.file-icon {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.file-info h6 {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.file-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* Footer */
+.chat-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #e2e8f0;
+    background: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-actions-left {
+    display: flex;
+    gap: 8px;
+}
+
+.chat-actions-left button {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.chat-actions-left button:hover {
+    color: var(--primary);
+}
+
+.chat-input {
+    flex: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 12px 18px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.send-button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+}
+
+.send-button:hover {
+    background: #0a58ca;
+    transform: scale(1.05);
+}
+
+/* File Preview */
+.file-preview {
+    padding: 10px 20px;
+    background: #f1f5f9;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.file-preview img {
+    max-width: 80px;
+    border-radius: 8px;
+}
+
+.file-preview-info {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.file-preview-info h6 {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.file-preview-info p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.file-preview-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Typing Indicator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    align-self: flex-start;
+}
+
+.typing-bubble {
+    background: white;
+    padding: 12px 16px;
+    border-radius: 18px;
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 4px;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: 0s; }
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typing {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+        height: 95vh;
+    }
+    
+    .chat-list, .chat-area {
+        width: 100%;
+    }
+    
+    .chat-list {
+        height: 40%;
+    }
+    
+    .chat-area {
+        height: 60%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <!-- LEFT: Chat List -->
+    <div class="chat-list">
+        <div class="chat-list-header">
+            <h5 class="mb-3">Messages</h5>
+            <input type="text" class="form-control chat-search" placeholder="Search conversations...">
+        </div>
+        
+        <div class="chat-list-body">
+            <!-- Active Chat -->
+            <div class="chat-list-item active" onclick="openChat(event, 'Ramesh Kumar', 'online')">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" class="avatar">
+                <div class="chat-info">
+                    <h6>Ramesh Kumar</h6>
+                    <p><span class="status-dot status-online"></span>Electrician • Online</p>
+                </div>
+                <div class="chat-meta">
+                    <div class="chat-time">10:42 AM</div>
+                    <div class="unread-badge">3</div>
+                </div>
+            </div>
+            
+            <!-- Other Chats -->
+            <div class="chat-list-item" onclick="openChat(event, 'Suresh Plumber', 'offline')">
+                <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" class="avatar">
+                <div class="chat-info">
+                    <h6>Suresh Plumber</h6>
+                    <p><span class="status-dot status-offline"></span>Plumber • Offline</p>
+                </div>
+                <div class="chat-meta">
+                    <div class="chat-time">Yesterday</div>
+                </div>
+            </div>
+            
+            <div class="chat-list-item" onclick="openChat(event, 'Priya Carpenter', 'online')">
+                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" class="avatar">
+                <div class="chat-info">
+                    <h6>Priya Carpenter</h6>
+                    <p><span class="status-dot status-online"></span>Carpenter • Online</p>
+                </div>
+                <div class="chat-meta">
+                    <div class="chat-time">12:30 PM</div>
+                    <div class="unread-badge">1</div>
+                </div>
+            </div>
+            
+            <div class="chat-list-item" onclick="openChat(event, 'Ankit Electrician', 'away')">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" class="avatar">
+                <div class="chat-info">
+                    <h6>Ankit Electrician</h6>
+                    <p><span class="status-dot status-away"></span>Electrician • Away</p>
+                </div>
+                <div class="chat-meta">
+                    <div class="chat-time">11:15 AM</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: Chat Area -->
+    <div class="chat-area">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="chat-user-info">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80" id="chatUserAvatar">
+                <div class="chat-user-details">
+                    <h5 id="chatUserName">Ramesh Kumar</h5>
+                    <p id="chatUserStatus"><span class="status-dot status-online" id="statusDot"></span><span id="statusText">Online</span> • Electrician</p>
+                </div>
+            </div>
+            <div class="chat-actions">
+                <button><i class="fas fa-phone"></i></button>
+                <button><i class="fas fa-video"></i></button>
+                <button><i class="fas fa-info-circle"></i></button>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-body" id="chatBody">
+            <!-- Date Separator -->
+            <div class="text-center my-3">
+                <span class="badge bg-light text-dark">Today</span>
+            </div>
+            
+            <!-- Worker Message -->
+            <div class="message worker">
+                <div class="message-bubble">
+                    Hello! I'll be arriving at your location by 5 PM today for the fan repair service.
+                </div>
+                <div class="message-time">10:30 AM</div>
+            </div>
+            
+            <!-- User Message -->
+            <div class="message user">
+                <div class="message-bubble">
+                    That's perfect. Please bring the necessary tools for ceiling fan installation as well.
+                </div>
+                <div class="message-time">10:32 AM</div>
+                <div class="message-status"><i class="fas fa-check-double"></i> Seen</div>
+            </div>
+            
+            <!-- Worker Message with Image -->
+            <div class="message worker">
+                <div class="message-bubble">
+                    <img src="https://images.unsplash.com/photo-1581093458791-8a6b6d44e585?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80" class="message-image">
+                    I have these types of fans available. Which one would you prefer?
+                </div>
+                <div class="message-time">10:35 AM</div>
+            </div>
+            
+            <!-- User Message with File -->
+            <div class="message user">
+                <div class="message-bubble">
+                    <div class="message-file">
+                        <div class="file-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="file-info">
+                            <h6>Room_Measurements.pdf</h6>
+                            <p>245 KB • Document</p>
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary">Download</button>
+                    </div>
+                </div>
+                <div class="message-time">10:40 AM</div>
+                <div class="message-status"><i class="fas fa-check"></i> Sent</div>
+            </div>
+            
+            <!-- Typing Indicator -->
+            <div class="typing-indicator">
+                <div class="typing-bubble">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Preview -->
+        <div class="file-preview" id="filePreview" style="display: none;">
+            <img id="previewImage">
+            <div class="file-preview-info">
+                <h6 id="previewFileName"></h6>
+                <p id="previewFileSize"></p>
+            </div>
+            <div class="file-preview-actions">
+                <button class="btn btn-sm btn-outline-secondary" onclick="cancelFile()">Cancel</button>
+                <button class="btn btn-sm btn-primary" onclick="sendFile()">Send</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="chat-footer">
+            <div class="chat-actions-left">
+                <button onclick="triggerFile()"><i class="fas fa-paperclip"></i></button>
+                <button><i class="fas fa-image"></i></button>
+                <button><i class="fas fa-microphone"></i></button>
+            </div>
+            <input type="text" class="chat-input" id="msgInput" placeholder="Type a message...">
+            <button class="send-button" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden File Input -->
+<input type="file" id="fileInput" hidden onchange="uploadFile()">
+
+<script>
+// Chat switching function
+function openChat(e, name, status) {
+    // Update active state in chat list
+    document.querySelectorAll(".chat-list-item").forEach(item => {
+        item.classList.remove("active");
+    });
+    e.currentTarget.classList.add("active");
+    
+    // Update chat header
+    document.getElementById("chatUserName").textContent = name;
+    document.getElementById("chatUserAvatar").src = e.currentTarget.querySelector('.avatar').src;
+    
+    // Update status
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+    
+    statusDot.className = "status-dot";
+    if (status === 'online') {
+        statusDot.classList.add('status-online');
+        statusText.textContent = 'Online';
+    } else if (status === 'away') {
+        statusDot.classList.add('status-away');
+        statusText.textContent = 'Away';
+    } else {
+        statusDot.classList.add('status-offline');
+        statusText.textContent = 'Offline';
+    }
+    
+    // Clear and add sample messages for demo
+    const chatBody = document.getElementById("chatBody");
+    chatBody.innerHTML = `
+        <div class="text-center my-3">
+            <span class="badge bg-light text-dark">Today</span>
+        </div>
+        <div class="message worker">
+            <div class="message-bubble">
+                Hello! How can I help you today?
+            </div>
+            <div class="message-time">${getTime()}</div>
+        </div>
+    `;
+    
+    scrollToBottom();
+}
+
+// Send message function
+function sendMessage() {
+    const input = document.getElementById("msgInput");
+    const text = input.value.trim();
+    if (!text) return;
+    
+    const chatBody = document.getElementById("chatBody");
+    
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message user";
+    messageDiv.innerHTML = `
+        <div class="message-bubble">${text}</div>
+        <div class="message-time">${getTime()}</div>
+        <div class="message-status"><i class="fas fa-check"></i> Sent</div>
+    `;
+    
+    chatBody.appendChild(messageDiv);
+    input.value = "";
+    scrollToBottom();
+    
+    // Simulate reply after 1-3 seconds
+    setTimeout(() => {
+        const replyDiv = document.createElement("div");
+        replyDiv.className = "message worker";
+        replyDiv.innerHTML = `
+            <div class="message-bubble">
+                Thanks for your message. I'll get back to you shortly.
+            </div>
+            <div class="message-time">${getTime()}</div>
+        `;
+        chatBody.appendChild(replyDiv);
+        scrollToBottom();
+    }, 1000 + Math.random() * 2000);
+}
+
+// File handling functions
+function triggerFile() {
+    document.getElementById("fileInput").click();
+}
+
+function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+    if (!file) return;
+    
+    const preview = document.getElementById("filePreview");
+    const previewImage = document.getElementById("previewImage");
+    const previewFileName = document.getElementById("previewFileName");
+    const previewFileSize = document.getElementById("previewFileSize");
+    
+    // Show preview
+    preview.style.display = 'flex';
+    
+    if (file.type.startsWith("image")) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            previewImage.src = reader.result;
+            previewImage.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewImage.style.display = 'none';
+    }
+    
+    previewFileName.textContent = file.name;
+    previewFileSize.textContent = formatFileSize(file.size);
+}
+
+function sendFile() {
+    const file = document.getElementById("fileInput").files[0];
+    if (!file) return;
+    
+    const chatBody = document.getElementById("chatBody");
+    
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message user";
+    
+    if (file.type.startsWith("image")) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    <img src="${reader.result}" class="message-image">
+                </div>
+                <div class="message-time">${getTime()}</div>
+                <div class="message-status"><i class="fas fa-check"></i> Sent</div>
+            `;
+            chatBody.appendChild(messageDiv);
+            scrollToBottom();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        messageDiv.innerHTML = `
+            <div class="message-bubble">
+                <div class="message-file">
+                    <div class="file-icon">
+                        <i class="fas fa-file"></i>
+                    </div>
+                    <div class="file-info">
+                        <h6>${file.name}</h6>
+                        <p>${formatFileSize(file.size)} • Document</p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary">Download</button>
+                </div>
+            </div>
+            <div class="message-time">${getTime()}</div>
+            <div class="message-status"><i class="fas fa-check"></i> Sent</div>
+        `;
+        chatBody.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    // Hide preview
+    document.getElementById("filePreview").style.display = 'none';
+    document.getElementById("fileInput").value = '';
+}
+
+function cancelFile() {
+    document.getElementById("filePreview").style.display = 'none';
+    document.getElementById("fileInput").value = '';
+}
+
+// Helper functions
+function getTime() {
+    return new Date().toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + " bytes";
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+    else return (bytes / 1048576).toFixed(1) + " MB";
+}
+
+function scrollToBottom() {
+    const chatBody = document.getElementById("chatBody");
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// Allow sending message with Enter key
+document.getElementById("msgInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        sendMessage();
+    }
+});
+
+// Initialize
+scrollToBottom();
+</script>
+
+<script src="/js/api.js"></script>
+
+
+</body>
+</html>

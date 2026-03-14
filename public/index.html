@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ProServe — Professional Services at Your Doorstep</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      --primary:#0d6efd;
+      --card-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+
+    body{
+      font-family: "Poppins", sans-serif;
+      background:#f4f7fb;
+    }
+
+    /* Navbar */
+    .navbar{
+      background:white;
+      box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .brand{
+      color:var(--primary);
+      font-weight:700;
+      font-size:1.4rem;
+    }
+
+    /* Hero Section */
+    .hero{
+      background:linear-gradient(rgba(13,110,253,0.8),rgba(13,110,253,0.6)), 
+      url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover;
+      color:white;
+      padding:120px 20px;
+      text-align:center;
+      border-radius:0 0 30px 30px;
+    }
+
+    .hero h1{
+      font-size:2.6rem;
+      font-weight:700;
+    }
+
+    .search-box{
+      max-width:700px;
+      margin:20px auto;
+    }
+
+    /* Emoji Category Icons */
+    .cat-emoji{
+      font-size:48px;
+      width:88px;
+      height:88px;
+      background:white;
+      border-radius:50%;
+      border:3px solid var(--primary);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:var(--card-shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .cat-emoji:hover {
+      transform: scale(1.1);
+    }
+
+    .cat-title{
+      font-weight:600;
+      margin-top:8px;
+    }
+
+    /* Services */
+    .service-card img{
+      height:170px;
+      object-fit:cover;
+      border-radius:10px;
+    }
+
+    .service-card{
+      border-radius:16px;
+      box-shadow:var(--card-shadow);
+      padding:10px;
+      background:white;
+      transition: transform 0.3s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-5px);
+    }
+
+    /* Backend Section */
+    .backend-card{
+      background:white;
+      padding:14px;
+      border-radius:12px;
+      box-shadow:var(--card-shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .backend-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .backend-card img{
+      height:140px;
+      width:100%;
+      object-fit:cover;
+      border-radius:10px;
+    }
+
+    /* Features Section */
+    .feature-box {
+      padding: 30px 15px;
+      border-radius: 8px;
+      text-align: center;
+      background-color: #f8f9fa;
+      height: 100%;
+    }
+
+    .service-icon {
+      font-size: 2.5rem;
+      color: #0d6efd;
+      margin-bottom: 15px;
+    }
+
+    /* Testimonials */
+    .testimonial-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: var(--card-shadow);
+      height: 100%;
+    }
+
+    /* How It Works */
+    .step-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 1.8rem;
+    }
+
+    /* Footer */
+    .footer{
+      background:#0d6efd;
+      color:white;
+      padding:40px 20px;
+      margin-top:40px;
+    }
+
+    .footer a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer a:hover {
+      color: white;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+      color: white;
+      padding: 60px 20px;
+      border-radius: 20px;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg px-4 py-3">
+  <a class="navbar-brand brand"><i class="fas fa-tools me-2"></i>ProServe</a>
+  <div class="ms-auto">
+    <a href="login.html" class="btn btn-outline-primary me-2"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+    <a href="signup.html" class="btn btn-primary"><i class="fas fa-user-plus me-1"></i>Sign Up</a>
+  </div>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <h1>Professional Services at Your Doorstep</h1>
+  <p class="mt-2">Teachers · Cooks · Electricians · Drivers · Cleaners & More</p>
+
+  <div class="search-box">
+    <div class="input-group">
+      <input type="text" class="form-control form-control-lg" placeholder="Search services (e.g., electrician, plumber)">
+      <button class="btn btn-light" type="button">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- TOP CATEGORIES (EMOJI VERSION) -->
+<div class="container mt-5">
+  <h3 class="fw-bold mb-3">Top Categories</h3>
+
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+
+      <!-- HUMAN SERVICE CATEGORIES -->
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🎓</div>
+        <div class="cat-title">Teacher</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">👨‍🍳</div>
+        <div class="cat-title">Cook</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">👶</div>
+        <div class="cat-title">Babysitter</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">💄</div>
+        <div class="cat-title">Beautician</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">💇‍♂</div>
+        <div class="cat-title">Barber</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🧵</div>
+        <div class="cat-title">Tailor</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🛍</div>
+        <div class="cat-title">Salesman</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🧘</div>
+        <div class="cat-title">Yoga Trainer</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🏋</div>
+        <div class="cat-title">Fitness Trainer</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🧹</div>
+        <div class="cat-title">Housemaid</div>
+      </div>
+
+      <!-- TECHNICAL SERVICE CATEGORIES -->
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🔌</div>
+        <div class="cat-title">Electrician</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🚰</div>
+        <div class="cat-title">Plumber</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">❄</div>
+        <div class="cat-title">AC Tech</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🎨</div>
+        <div class="cat-title">Painter</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🚗</div>
+        <div class="cat-title">Driver</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">💻</div>
+        <div class="cat-title">Computer Repair</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🔧</div>
+        <div class="cat-title">Car Mechanic</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🧽</div>
+        <div class="cat-title">Cleaning</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">📦</div>
+        <div class="cat-title">Delivery Boy</div>
+      </div>
+
+      <div class="swiper-slide text-center">
+        <div class="cat-emoji">🪚</div>
+        <div class="cat-title">Carpenter</div>
+      </div>
+
+    </div>
+
+    <div class="swiper-pagination"></div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="fw-bold mb-3">Why Choose ProServe?</h2>
+        <p class="lead">We connect you with verified professionals for quality service every time.</p>
+      </div>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-shield-alt service-icon"></i>
+          <h4>Verified Professionals</h4>
+          <p>All service providers are background-checked and reviewed by customers.</p>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-clock service-icon"></i>
+          <h4>Quick Response</h4>
+          <p>Get connected with available professionals in your area within minutes.</p>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="feature-box">
+          <i class="fas fa-dollar-sign service-icon"></i>
+          <h4>Transparent Pricing</h4>
+          <p>No hidden costs. See prices upfront before booking any service.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+ <!-- POPULAR SERVICES -->
+<section class="pb-5">
+  <div class="container">
+    <div class="d-flex justify-content-between mb-3">
+      <h3 class="mb-0">Popular Services</h3>
+      <small class="text-muted">Top booked this month</small>
+    </div>
+
+    <div class="row g-4">
+      
+      <div class="col-md-4">
+        <div class="card service-card">
+          <img class="card-img-top"
+               src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=600"
+               alt="Home Cleaning">
+          <div class="card-body">
+            <h5 class="card-title">Home Cleaning</h5>
+            <p class="text-muted">Starting ₹900 • Verified staff</p>
+            <a href="service-details.html" class="btn btn-primary btn-sm">Book Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card service-card">
+          <img class="card-img-top"
+               src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=600"
+               alt="Electric Repair">
+          <div class="card-body">
+            <h5 class="card-title">Electric Repair</h5>
+            <p class="text-muted">Starting ₹300 • Fast service</p>
+            <a href="service-details.html" class="btn btn-primary btn-sm">Book Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card service-card">
+          <img class="card-img-top"
+               src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=600"
+               alt="Plumbing">
+          <div class="card-body">
+            <h5 class="card-title">Plumbing</h5>
+            <p class="text-muted">Starting ₹450 • Leak fixes</p>
+            <a href="service-details.html" class="btn btn-primary btn-sm">Book Now</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="fw-bold mb-3">How ProServe Works</h2>
+        <p class="lead">Getting professional help has never been easier</p>
+      </div>
+    </div>
+    
+    <div class="row g-4 text-center">
+      <div class="col-md-4">
+        <div class="p-4">
+          <div class="step-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h4>1. Search</h4>
+          <p>Find the service you need and browse available professionals in your area.</p>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="p-4">
+          <div class="step-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <h4>2. Book</h4>
+          <p>Select a professional, choose a time that works for you, and book instantly.</p>
+        </div>
+      </div>
+      
+      <div class="col-md-4">
+        <div class="p-4">
+          <div class="step-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <h4>3. Review</h4>
+          <p>After service completion, rate your experience to help our community.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM / BACKEND FEATURES -->
+<section class="pb-5">
+  <div class="container">
+    <h3 class="mb-3">How Our System Works</h3>
+
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="backend-card">
+          <img loading="lazy" alt="Booking system"
+               src="https://images.unsplash.com/photo-1559526324-4b4b4b4b4b4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600"
+               class="img-fluid">
+          <h6 class="mt-2 fw-bold">Booking System</h6>
+          <p class="text-muted">Fast, secure & real-time booking flow.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="backend-card">
+          <img loading="lazy" alt="Chat system"
+               src="https://images.unsplash.com/photo-1587560699334-cc4ff634909a?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600"
+               class="img-fluid">
+          <h6 class="mt-2 fw-bold">Real-time Chat</h6>
+          <p class="text-muted">Instant messaging between users and workers.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="backend-card">
+          <img loading="lazy" alt="Verification"
+               src="https://images.unsplash.com/photo-1563013546-77f64949c0ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600"
+               class="img-fluid">
+          <h6 class="mt-2 fw-bold">Worker Verification</h6>
+          <p class="text-muted">Document verification & admin approval.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="backend-card">
+          <img loading="lazy" alt="Payments"
+               src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600"
+               class="img-fluid">
+          <h6 class="mt-2 fw-bold">Payments</h6>
+          <p class="text-muted">UPI, card, wallet & COD payments supported.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="backend-card">
+          <img loading="lazy" alt="Tracking"
+               src="https://images.unsplash.com/photo-1543286386-713bdd548da4?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600"
+               class="img-fluid">
+          <h6 class="mt-2 fw-bold">Live Tracking</h6>
+          <p class="text-muted">Track worker arrival in real time.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="backend-card">
+          <img loading="lazy" alt="Admin panel"
+               src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&h=600"
+               class="img-fluid">
+          <h6 class="mt-2 fw-bold"><a href="admin-panel.html">Admin Dashboard</a></h6>
+          <p class="text-muted">Manage bookings, payments, verification & more.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="container my-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">What Our Customers Say</h2>
+    <p class="lead">Real feedback from people who used ProServe</p>
+  </div>
+  
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="testimonial-card">
+        <div class="d-flex mb-3">
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+        </div>
+        <p class="card-text">"The electrician I found through ProServe was professional, punctual, and fixed my issue in no time. Highly recommended!"</p>
+        <div class="d-flex align-items-center mt-3">
+          <div class="flex-grow-1">
+            <h6 class="mb-0">Sarah Johnson</h6>
+            <small class="text-muted">Homeowner</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="testimonial-card">
+        <div class="d-flex mb-3">
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+        </div>
+        <p class="card-text">"As a service provider, ProServe has helped me grow my business significantly. The platform is easy to use and brings me quality clients."</p>
+        <div class="d-flex align-items-center mt-3">
+          <div class="flex-grow-1">
+            <h6 class="mb-0">Michael Torres</h6>
+            <small class="text-muted">Plumbing Professional</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-4">
+      <div class="testimonial-card">
+        <div class="d-flex mb-3">
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+          <i class="fas fa-star text-warning"></i>
+        </div>
+        <p class="card-text">"I needed a carpenter urgently for a custom bookshelf. ProServe connected me with someone who did an amazing job at a fair price."</p>
+        <div class="d-flex align-items-center mt-3">
+          <div class="flex-grow-1">
+            <h6 class="mb-0">David Chen</h6>
+            <small class="text-muted">Small Business Owner</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container text-center py-4">
+    <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
+    <p class="lead mb-4">Join thousands of satisfied customers and service providers</p>
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+      <a href="signup.html" class="btn btn-light btn-lg">Sign Up as Customer</a>
+      <a href="provider-signup.html" class="btn btn-outline-light btn-lg">Become a Service Provider</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <h5 class="fw-bold mb-3">
+          <i class="fas fa-tools me-2"></i>ProServe
+        </h5>
+        <p class="text-white-50">Connecting you with trusted professionals for all your home service needs.</p>
+        <div class="d-flex gap-3">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      
+      <div class="col-lg-2 col-md-6">
+        <h5 class="fw-bold text-white mb-3">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="index.html">Home</a></li>
+          <li class="mb-2"><a href="services.html">Services</a></li>
+          <li class="mb-2"><a href="about.html">About Us</a></li>
+          <li class="mb-2"><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-2 col-md-6">
+        <h5 class="fw-bold text-white mb-3">Services</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="services.html?category=electrician">Electrician</a></li>
+          <li class="mb-2"><a href="services.html?category=plumber">Plumber</a></li>
+          <li class="mb-2"><a href="services.html?category=carpenter">Carpenter</a></li>
+          <li class="mb-2"><a href="services.html?category=cleaner">Cleaner</a></li>
+        </ul>
+      </div>
+      
+      <div class="col-lg-4">
+        <h5 class="fw-bold text-white mb-3">Contact Us</h5>
+        <ul class="list-unstyled text-white-50">
+          <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Service Street, City, State 12345</li>
+          <li class="mb-2"><i class="fas fa-phone me-2"></i>(555) 123-4567</li>
+          <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@proserve.example.com</li>
+        </ul>
+      </div>
+    </div>
+    
+    <hr class="my-4 border-light">
+    
+    <div class="row align-items-center">
+      <div class="col-md-6 text-center text-md-start">
+        <p class="text-white-50 mb-0">&copy; 2025 ProServe. All rights reserved.</p>
+      </div>
+      <div class="col-md-6 text-center text-md-end">
+        <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
+        <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper(".mySwiper", {
+    slidesPerView: 6,
+    spaceBetween: 14,
+    loop: true,
+    autoplay: { delay: 1800 },
+    pagination: { el: ".swiper-pagination", clickable: true },
+    breakpoints: {
+      0:{slidesPerView:2},
+      576:{slidesPerView:3},
+      768:{slidesPerView:4},
+      992:{slidesPerView:6}
+    }
+  });
+</script>
+
+<script src="/js/api.js"></script>
+
+
+</body>
+</html>
