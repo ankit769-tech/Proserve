@@ -25,17 +25,65 @@
       background:#f4f7fb;
     }
 
-    /* Navbar */
     .navbar{
-      background:white;
-      box-shadow:0 4px 12px rgba(0,0,0,0.05);
-    }
+       display: flex;
+       align-items: center;
+       padding: 15px 40px;
+       background: white;
+       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+       position: sticky;
+       top: 0;
+       z-index: 1000;
+}
 
-    .brand{
-      color:var(--primary);
-      font-weight:700;
-      font-size:1.4rem;
-    }
+/* LOGO */
+.logo{
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+/* PUSH RIGHT SECTION */
+.right-section{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* MENU */
+.menu a{
+  margin-right: 25px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+}
+
+.menu a:hover{
+  color: #0d6efd;
+}
+
+/* BUTTONS */
+ .buttons .login{
+  border: 1px solid #0d6efd;
+  padding: 6px 15px;
+  margin-right: 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+.buttons .signup{
+  background: #0d6efd;
+  color: white;
+  padding: 6px 15px;
+  border-radius: 6px;
+  text-decoration: none;
+} 
+
+.buttons a:hover{
+  background-color:#0a58ca;
+  color: #f4f7fb;
+}
 
     /* Hero Section */
     .hero{
@@ -189,13 +237,31 @@
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg px-4 py-3">
-  <a class="navbar-brand brand"><i class="fas fa-tools me-2"></i>ProServe</a>
-  <div class="ms-auto">
-    <a href="login.html" class="btn btn-outline-primary me-2"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
-    <a href="signup.html" class="btn btn-primary"><i class="fas fa-user-plus me-1"></i>Sign Up</a>
+<nav class="navbar">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <i class="fas fa-tools"></i> BigBrother
   </div>
+
+  <!-- RIGHT SIDE (MENU + BUTTONS) -->
+  <div class="right-section">
+
+    <!-- MENU -->
+    <div class="menu">
+      <a href="#services">Services</a>
+      <a href="#how-it-works">How it Works</a>
+      <a href="#footer">Contact Us</a>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="buttons">
+      <a href="login.html" class="login"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+      <a href="signup.html" class="signup"><i class="fas fa-user-plus me-1"></i>Sign Up</a>
+    </div>
+
+  </div>
+
 </nav>
 
 <!-- HERO SECTION -->
@@ -367,7 +433,7 @@
 </section>
 
  <!-- POPULAR SERVICES -->
-<section class="pb-5">
+<section class="pb-5" id="services">
   <div class="container">
     <div class="d-flex justify-content-between mb-3">
       <h3 class="mb-0">Popular Services</h3>
@@ -420,7 +486,7 @@
 </section>
 
 <!-- How It Works Section -->
-<section class="py-5 bg-light">
+<section class="py-5 bg-light" id="how-it-works">
   <div class="container">
     <div class="row text-center mb-5">
       <div class="col-lg-8 mx-auto">
@@ -534,8 +600,8 @@
   </div>
 </section>
 
-<!-- Testimonials Section -->
-<section class="container my-5">
+<!-- Reviews Section -->
+<section class="container my-5" id="reviews">
   <div class="text-center mb-5">
     <h2 class="fw-bold">What Our Customers Say</h2>
     <p class="lead">Real feedback from people who used ProServe</p>
@@ -614,8 +680,8 @@
 </section>
 
 <!-- FOOTER -->
-<!-- FOOTER -->
-<footer class="footer">
+
+<footer class="footer" id="footer">
   <div class="container">
     <div class="row g-4">
       <div class="col-lg-4">
