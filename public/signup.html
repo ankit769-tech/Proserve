@@ -4,153 +4,475 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProServe - Signup</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-
     <style>
-
-        /* Fade-In Animation */
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Slide-Up Animation */
-        .slide-up {
-            animation: slideUp 0.8s ease;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Hover Up Animation */
-        .hover-up:hover {
-            transform: translateY(-6px);
-            transition: 0.3s;
-        }
-
-        /* Button Hover Animation */
-        .btn-animate {
-            transition: 0.3s;
-        }
-
-        .btn-animate:hover {
-            transform: scale(1.05);
-        }
-
-        /* Glow Effect */
-        .glow:hover {
-            box-shadow: 0 0 20px rgba(13,110,253,0.6);
-        }
-
+        * { box-sizing: border-box; }
+        
         body {
-            background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d')
-                        center/cover no-repeat;
-            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-        }
-
-        .glass-box {
-            width: 380px;
-            padding: 35px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0,40,80,0.9), rgba(20,0,60,0.9)),
+                        url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3') center/cover no-repeat;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
         }
 
-        input {
-            border-radius: 10px;
-            height: 45px;
+        .glass-box {
+            max-width: 440px;
+            width: 100%;
+            padding: 2.5rem;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            position: relative;
         }
 
-        .btn-primary {
-            border-radius: 25px;
-            height: 45px;
+        .glass-box h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
             font-weight: bold;
+            color: white;
+        }
+
+        .glass-box p {
+            text-align: center;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .form-floating {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            height: 52px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-control:focus {
+            background: rgba(255,255,255,0.2);
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102,126,234,0.25);
+            outline: none;
+        }
+
+        .form-floating > label {
+            color: rgba(255,255,255,0.7);
+            padding-left: 1.25rem;
+            font-weight: 500;
+        }
+
+        /* Validation */
+        .is-valid {
+            border-color: #28a745 !important;
+            background: rgba(40,167,69,0.1) !important;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background: rgba(220,53,69,0.1) !important;
+        }
+
+        .invalid-feedback {
+            color: #ffc107;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+            font-weight: 500;
+        }
+
+        .is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+
+        /* CAPTCHA - Single Row Layout */
+        .captcha-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: end;
+        }
+
+        .captcha-display {
+            flex: 1;
+        }
+
+        .captcha-container {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 16px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+        }
+
+        .captcha-code {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: white;
+            font-family: monospace;
+            flex: 1;
+            text-transform: uppercase;
+        }
+
+        .captcha-refresh {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: 0.3s;
+            margin-left: auto;
+        }
+
+        .captcha-refresh:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(180deg);
+        }
+
+        .captcha-input-container {
+            flex: 1;
+        }
+
+        /* Checkbox */
+        .form-check {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check-input {
+            width: 1.3em;
+            height: 1.3em;
+            margin-top: 0.1em;
+        }
+
+        .form-check-label {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .form-check-label a {
+            color: #ffc107;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .form-check-label a:hover {
+            color: white;
+        }
+
+        /* Button */
+        .btn-primary {
+            width: 100%;
+            height: 52px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102,126,234,0.4);
+        }
+
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .glass-box { padding: 2rem 1.5rem; }
+            .captcha-row { flex-direction: column; gap: 0.75rem; }
+        }
+
+        /* Case sensitivity note */
+        .captcha-note {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+            font-style: italic;
         }
     </style>
 </head>
-
 <body>
+    <div class="glass-box">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <i class="fas fa-user-plus fa-2x mb-3" style="color: #667eea;"></i>
+            <h2>Create Account</h2>
+            <p>Join ProServe today</p>
+        </div>
 
-<div class="glass-box fade-in">
-    <h3 class="text-center fw-bold mb-4">Create Account</h3>
+        <form id="signupForm">
+            <!-- Full Name - Only Letters -->
+            <div class="form-floating">
+                <input type="text" class="form-control" id="signupName" placeholder="Full Name" required maxlength="50">
+                <label for="signupName">Full Name</label>
+                <div class="invalid-feedback">Only string characters allowed (No numbers/special chars)</div>
+            </div>
 
-    <!-- Added IDs -->
-    <input id="signupName" type="text" class="form-control mb-3" placeholder="Full Name">
-    <input id="signupEmail" type="email" class="form-control mb-3" placeholder="Email Address">
-    <input id="signupPhone" type="number" class="form-control mb-3" placeholder="Phone Number">
-    <input id="signupPassword" type="password" class="form-control mb-3" placeholder="Password">
+            <!-- Email -->
+            <div class="form-floating">
+                <input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
+                <label for="signupEmail">Email Address</label>
+                <div class="invalid-feedback">Must include @ and domain like gmail.com, yahoo.com etc</div>
+            </div>
 
-    <!-- Role: by default customer (no UI change) -->
-    <!-- If later you want dropdown for role, we can add it -->
+            <!-- Phone - Exactly 10 digits -->
+            <div class="form-floating">
+                <input type="tel" class="form-control" id="signupPhone" placeholder="Phone" required maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)">
+                <label for="signupPhone">Phone Number (10 digits only)</label>
+                <div class="invalid-feedback">Must be exactly 10 digits (numbers only)</div>
+            </div>
 
-    <button onclick="handleSignup()" class="btn btn-primary w-100 mb-3 btn-animate glow">
-        Sign Up
-    </button>
+            <!-- Password -->
+            <div class="form-floating">
+                <input type="password" class="form-control" id="signupPassword" placeholder="Password" required minlength="6">
+                <label for="signupPassword">Password</label>
+                <div class="invalid-feedback">Password must be at least 6 characters</div>
+            </div>
 
-    <p class="text-center">
-        Already have an account?
-        <a href="login.html" class="text-warning fw-bold">Login</a>
-    </p>
-</div>
+            <!-- Confirm Password -->
+            <div class="form-floating">
+                <input type="password" class="form-control" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <label for="signupConfirmPassword">Confirm Password</label>
+                <div class="invalid-feedback">Passwords do not match</div>
+            </div>
 
-<script>
-    async function handleSignup() {
-        const name = document.getElementById('signupName').value.trim();
-        const email = document.getElementById('signupEmail').value.trim();
-        const phone = document.getElementById('signupPhone').value.trim();
-        const password = document.getElementById('signupPassword').value.trim();
-        const role = 'customer'; // default, since UI me role field nahi hai
+            <!-- CAPTCHA - Single Row with Case Sensitivity -->
+            <div class="captcha-row">
+                <div class="captcha-display">
+                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block; font-size: 0.9rem;">Captcha Code</label>
+                    <div class="captcha-container">
+                        <span id="captchaCode"></span>
+                        <button type="button" class="captcha-refresh" onclick="generateCaptcha()" title="Refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="captcha-note">Case Sensitive (AaBbCc)</div>
+                </div>
+                <div class="captcha-input-container">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="captchaInput" placeholder="Enter code" maxlength="6" required>
+                        <label for="captchaInput">Enter code exactly</label>
+                        <div class="invalid-feedback">Enter exact code (case sensitive)</div>
+                    </div>
+                </div>
+            </div>
 
-        if (!name || !email || !password) {
-            alert('Please fill name, email and password');
-            return;
+            <!-- Terms -->
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="termsCheckbox" required>
+                <label class="form-check-label" for="termsCheckbox">
+                    I agree to the <a href="#" onclick="alert('Terms modal')">Terms & Conditions</a> 
+                    and <a href="#" onclick="alert('Privacy modal')">Privacy Policy</a>
+                </label>
+                <div class="invalid-feedback">You must accept terms & conditions</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="signupBtn">
+                Sign Up
+            </button>
+
+            <p style="text-align: center; margin-top: 1.5rem; opacity: 0.8;">
+                Already have an account? 
+                <a href="login.html" style="color: #ffc107; font-weight: 600;">Login here</a>
+            </p>
+        </form>
+    </div>
+
+    <script>
+        let currentCaptcha = '';
+
+        // Generate CAPTCHA - Now generates mixed case
+        function generateCaptcha() {
+            const upperChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+            const lowerChars = 'abcdefghjklmnpqrstuvwxyz';
+            const numbers = '23456789';
+            const allChars = upperChars + lowerChars + numbers;
+            
+            currentCaptcha = '';
+            for (let i = 0; i < 6; i++) {
+                currentCaptcha += allChars.charAt(Math.floor(Math.random() * allChars.length));
+            }
+            document.getElementById('captchaCode').textContent = currentCaptcha;
+            document.getElementById('captchaInput').value = '';
         }
 
-        try {
-            const res = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, phone, password, role })
+        // Updated CAPTCHA Validation - Case Sensitive
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const feedback = field.parentNode.querySelector('.invalid-feedback');
+            let valid = true;
+            let value = field.value.trim();
+
+            switch(fieldId) {
+                case 'signupName':
+                    const nameRegex = /^[a-zA-Z\s.'-]+$/;
+                    valid = value.length >= 2 && nameRegex.test(value);
+                    break;
+                    
+                case 'signupEmail':
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+                    valid = emailRegex.test(value);
+                    break;
+                    
+                case 'signupPhone':
+                    const phoneRegex = /^\d{10}$/;
+                    valid = phoneRegex.test(value);
+                    break;
+                    
+                case 'signupPassword':
+                    valid = value.length >= 6;
+                    break;
+                    
+                case 'captchaInput':
+                    // CASE SENSITIVE - Exact match required
+                    valid = value === currentCaptcha;
+                    break;
+            }
+
+            field.classList.toggle('is-invalid', !valid);
+            field.classList.toggle('is-valid', valid);
+            return valid;
+        }
+
+        function validateConfirmPassword() {
+            const pass1 = document.getElementById('signupPassword').value;
+            const pass2 = document.getElementById('signupConfirmPassword');
+            const feedback = pass2.parentNode.querySelector('.invalid-feedback');
+            const valid = pass2.value === pass1;
+            
+            pass2.classList.toggle('is-invalid', !valid);
+            pass2.classList.toggle('is-valid', valid);
+            return valid;
+        }
+
+        function validateTerms() {
+            const checkbox = document.getElementById('termsCheckbox');
+            const feedback = checkbox.parentNode.querySelector('.invalid-feedback');
+            const valid = checkbox.checked;
+            feedback.style.display = valid ? 'none' : 'block';
+            return valid;
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCaptcha();
+            
+            // Field validation
+            ['signupName','signupEmail','signupPhone','signupPassword','captchaInput'].forEach(id => {
+                const field = document.getElementById(id);
+                field.addEventListener('blur', () => validateField(id));
+                field.addEventListener('input', () => {
+                    if (field.classList.contains('is-invalid')) validateField(id);
+                });
             });
 
-            const data = await res.json();
+            document.getElementById('signupConfirmPassword').addEventListener('input', validateConfirmPassword);
+            document.getElementById('termsCheckbox').addEventListener('change', validateTerms);
+        });
 
-            if (!res.ok) {
-                throw new Error(data.message || 'Signup failed');
+        // Form submit - YOUR ORIGINAL BACKEND CODE (UNCHANGED)
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Validate all
+            let isValid = true;
+            ['signupName','signupEmail','signupPhone','signupPassword','captchaInput'].forEach(id => {
+                if (!document.getElementById(id).value.trim() || !validateField(id)) isValid = false;
+            });
+            
+            if (!validateConfirmPassword()) isValid = false;
+            if (!validateTerms()) isValid = false;
+
+            if (!isValid) {
+                alert('Please fix all errors before submitting');
+                return;
             }
 
-            // Save token + user in localStorage
-            if (data.token) {
-                localStorage.setItem('ps_token', data.token);
+            // YOUR ORIGINAL BACKEND CODE
+            const btn = document.getElementById('signupBtn');
+            btn.classList.add('btn-loading');
+            btn.textContent = 'Creating...';
+
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            const role = 'customer';
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, password, role })
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) throw new Error(data.message || 'Signup failed');
+
+                if (data.token) localStorage.setItem('ps_token', data.token);
+                if (data.user) {
+                    localStorage.setItem('ps_user', JSON.stringify(data.user));
+                    localStorage.setItem('ps_name', data.user.name || name);
+                }
+
+                window.location.href = 'user-dashboard.html';
+
+            } catch (err) {
+                alert('Signup failed: ' + err.message);
+            } finally {
+                btn.classList.remove('btn-loading');
+                btn.textContent = 'Sign Up';
             }
-            if (data.user) {
-                localStorage.setItem('ps_user', JSON.stringify(data.user));
-                localStorage.setItem('ps_name', data.user.name || name);
-            }
-
-            // Customer ko user-dashboard pe bhejo
-            window.location.href = 'user-dashboard.html';
-
-        } catch (err) {
-            alert('Signup failed: ' + err.message);
-        }
-    }
-
-    
-</script>
-
+        });
+    </script>
 </body>
 </html>
