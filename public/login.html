@@ -4,139 +4,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProServe - Login</title>
+    <title>BigBrother - Login</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* Fade-In Animation */
-        .fade-in {
-            animation: fadeIn 0.8s ease forwards;
-            opacity: 0;
+        :root {
+            --primary: #0d6efd;
+            --primary-dark: #0a58ca;
+            --card-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            --glass-bg: rgba(255, 255, 255, 0.95);
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Slide-Up Animation */
-        .slide-up {
-            animation: slideUp 0.8s ease;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        /* Hover Up Animation */
-        .hover-up:hover {
-            transform: translateY(-6px);
-            transition: 0.3s;
-        }
-
-        /* Button Hover Animation */
-        .btn-animate {
-            transition: 0.3s;
-        }
-
-        .btn-animate:hover {
-            transform: scale(1.05);
-        }
-
-        /* Glow Effect */
-        .glow:hover {
-            box-shadow: 0 0 20px rgba(13,110,253,0.6);
+        * {
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216')
-                        center/cover no-repeat;
-            height: 100vh;
+            background: /*linear-gradient(rgba(13,110,253,0.8), rgba(13,110,253,0.6)),*/ 
+                       /* url("https://wallpaperaccess.com/full/2314950.jpg") center/cover;*/
+                       url("https://wallpapercave.com/wp/wp9764081.jpg")  center/cover;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        .glass-box {
-            width: 350px;
-            background: rgba(255, 255, 255, 0.23);
+        /* Animated Background Pattern */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .login-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 35px;
+            box-shadow: var(--card-shadow), 0 0 0 1px rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .login-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .login-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 32px;
+            font-size: 1.6rem;
+        }
+
+        .form-floating {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .form-floating input {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .form-floating input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.15);
+            background: white;
+        }
+
+        .form-floating label {
+            color: #6c757d;
+            font-weight: 500;
+            padding-left: 20px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(13,110,253,0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .forgot-link {
+            color: var(--primary) !important;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--primary-dark) !important;
+            text-decoration: underline;
+        }
+
+        /* OTP Modal */
+        .otp-modal .modal-content {
+            border: none;
             border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
         }
 
-        input {
-            border-radius: 10px;
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            margin: 0 8px;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.15);
+            outline: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 25px;
+                margin: 10px;
+            }
+            
+            .otp-input {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                margin: 0 5px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+        }
+
+        .loading.show {
+            display: inline-block;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
         }
     </style>
 </head>
 
 <body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <div class="logo">
+                    <i class="fas fa-tools me-2"></i>BigBrother
+                </div>
+                <h4 class="login-title">Welcome Back</h4>
+                <p class="text-muted mb-0">Sign in to your account</p>
+            </div>
 
-    <div class="glass-box fade-in">
-        <h3 class="text-center fw-bold mb-4 text-white">Login</h3>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-floating">
+                    <input id="loginEmail" type="email" class="form-control" placeholder="name@example.com" required>
+                    <label for="loginEmail"><i class="fas fa-envelope me-1"></i>Email</label>
+                </div>
 
-        <!-- Added IDs -->
-        <input id="loginEmail" type="text" class="form-control mb-3" placeholder="Email">
-        <input id="loginPassword" type="password" class="form-control mb-3" placeholder="Password">
+                <div class="form-floating">
+                    <input id="loginPassword" type="password" class="form-control" placeholder="Password" required>
+                    <label for="loginPassword"><i class="fas fa-lock me-1"></i>Password</label>
+                </div>
 
-        <button onclick="handleLogin()" class="btn btn-primary w-100 mb-3 rounded-pill btn-animate glow">
-            Login
-        </button>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label small text-muted" for="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="#" class="forgot-link small" onclick="showForgotPassword(event)">
+                        Forgot Password?
+                    </a>
+                </div>
 
-        <p class="text-center text-white">
-            New user?
-            <a href="signup.html" class="text-warning">Create an account</a>
-        </p>
+                <button type="submit" class="btn btn-login w-100 text-white mb-3 position-relative">
+                    <span class="login-text">Sign In</span>
+                    <span class="loading spinner-border spinner-border-sm text-white ms-2"></span>
+                </button>
+            </form>
+
+            <div class="text-center">
+                <p class="text-muted mb-0">
+                    Don't have an account? 
+                    <a href="signup.html" class="text-primary fw-semibold">Sign up here</a>
+                </p>
+            </div>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">
+                    <i class="fas fa-shield-alt me-1"></i>Secure Login • Encrypted
+                </small>
+            </div>
+        </div>
     </div>
 
-    <script>
-        async function handleLogin() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-1">
+                    <h5 class="modal-title fw-bold text-dark">
+                        <i class="fas fa-key me-2 text-primary"></i>Reset Password
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="emailStep">
+                        <p class="text-muted mb-3">Enter your email to receive OTP</p>
+                        <div class="form-floating mb-3">
+                            <input id="resetEmail" type="email" class="form-control" placeholder="name@example.com" required>
+                            <label for="resetEmail"><i class="fas fa-envelope me-1"></i>Registered Email</label>
+                        </div>
+                        <button onclick="sendOTP()" class="btn btn-primary w-100 rounded-pill">
+                            Send OTP
+                        </button>
+                    </div>
 
-            if (!email || !password) {
-                alert('Please enter email and password');
-                return;
+                    <div id="otpStep" style="display: none;">
+                        <p class="text-muted mb-3">
+                            Enter the 6-digit code sent to <strong id="emailDisplay"></strong>
+                        </p>
+                        <div class="d-flex justify-content-center mb-4">
+                            <input type="text" class="otp-input" maxlength="1" id="otp1">
+                            <input type="text" class="otp-input" maxlength="1" id="otp2">
+                            <input type="text" class="otp-input" maxlength="1" id="otp3">
+                            <input type="text" class="otp-input" maxlength="1" id="otp4">
+                            <input type="text" class="otp-input" maxlength="1" id="otp5">
+                            <input type="text" class="otp-input" maxlength="1" id="otp6">
+                        </div>
+                        <button onclick="verifyOTP()" class="btn btn-success w-100 rounded-pill">
+                            Verify & Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const forgotModal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+
+    function showForgotPassword(event) {
+        event.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const resetEmail = document.getElementById('resetEmail');
+
+        if (email) resetEmail.value = email;
+
+        forgotModal.show();
+    }
+
+    // OTP auto focus
+    document.querySelectorAll('.otp-input').forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            if (e.target.value.length === 1) {
+                const next = document.querySelectorAll('.otp-input')[index + 1];
+                if (next) next.focus();
+            }
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !e.target.value) {
+                const prev = document.querySelectorAll('.otp-input')[index - 1];
+                if (prev) prev.focus();
+            }
+        });
+    });
+
+    // SEND OTP
+    async function sendOTP() {
+        const email = document.getElementById('resetEmail').value.trim();
+
+        if (!email) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Missing Email',
+                text: 'Please enter your email'
+            });
+        }
+
+        try {
+            const res = await fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.message);
+
+            document.getElementById('emailStep').style.display = 'none';
+            document.getElementById('otpStep').style.display = 'block';
+            document.getElementById('emailDisplay').textContent = email;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'OTP Sent',
+                text: 'Check your email'
+            });
+
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: err.message
+            });
+        }
+    }
+
+    // VERIFY OTP
+    async function verifyOTP() {
+        const otp = Array.from(document.querySelectorAll('.otp-input'))
+            .map(i => i.value).join('');
+
+        if (otp.length !== 6) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Invalid OTP',
+                text: 'Enter complete 6-digit OTP'
+            });
+        }
+
+        try {
+            const res = await fetch('/api/auth/verify-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: document.getElementById('resetEmail').value,
+                    otp
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.message);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Password Reset',
+                text: 'You can now login'
+            });
+
+            forgotModal.hide();
+
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: err.message
+            });
+        }
+    }
+
+    // LOGIN
+    async function handleLogin(event) {
+        event.preventDefault();
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+
+        if (!email || !password) {
+            return Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: 'Enter email and password'
+            });
+        }
+
+        const btn = event.target.querySelector('button[type="submit"]');
+        const loginText = btn.querySelector('.login-text');
+        const spinner = btn.querySelector('.loading');
+
+        spinner.classList.add('show');
+        loginText.style.opacity = '0.6';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) throw new Error(data.message);
+
+            // store
+            if (data.token) localStorage.setItem('ps_token', data.token);
+            if (data.user) {
+                localStorage.setItem('ps_user', JSON.stringify(data.user));
+                localStorage.setItem('ps_name', data.user.name || '');
             }
 
-            try {
-                const res = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+            // SUCCESS POPUP
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful',
+                text: 'Welcome back!',
+                timer: 1500,
+                showConfirmButton: false
+            });
 
-                const data = await res.json();
+            // redirect delay
+            const role = data.user?.role || 'customer';
 
-                if (!res.ok) {
-                    throw new Error(data.message || 'Login failed');
-                }
-
-                // Save token + user in localStorage
-                if (data.token) {
-                    localStorage.setItem('ps_token', data.token);
-                }
-                if (data.user) {
-                    localStorage.setItem('ps_user', JSON.stringify(data.user));
-                    localStorage.setItem('ps_name', data.user.name || '');
-                }
-
-                // Redirect based on role
-                const role = data.user?.role || 'customer';
+            setTimeout(() => {
                 if (role === 'worker') {
                     window.location.href = 'dashboard-worker.html';
                 } else {
                     window.location.href = 'user-dashboard.html';
                 }
+            }, 1500);
 
-            } catch (err) {
-                alert('Login failed: ' + err.message);
-            }
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: err.message
+            });
+        } finally {
+            spinner.classList.remove('show');
+            loginText.style.opacity = '1';
+            btn.disabled = false;
         }
-    </script>
-
-</body>
-</html>
+    }
+</script>
