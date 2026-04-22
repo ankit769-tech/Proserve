@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Details - ProServe</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+body {
+  background: #f3f6fb;
+  font-family: 'Segoe UI';
+}
+
+/* CARD */
+.service-box {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+.service-img {
+  width: 100%;
+  border-radius: 12px;
+  height: 250px;
+  object-fit: cover;
+}
+
+/* BADGE */
+.tag {
+  background: #0d6efd;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container my-5">
+
+  <div class="row g-4">
+
+    <!-- LEFT -->
+    <div class="col-md-6">
+      <img id="serviceImage" class="service-img">
+    </div>
+
+    <!-- RIGHT -->
+    <div class="col-md-6">
+      <div class="service-box">
+
+        <h3 id="serviceTitle"></h3>
+
+        <p class="text-muted" id="serviceDesc"></p>
+
+        <h4 class="text-primary" id="servicePrice"></h4>
+
+        <div class="mb-3">
+          <span class="tag">Verified</span>
+          <span class="tag">Top Rated</span>
+        </div>
+
+        <hr>
+
+        <h5>Service Provider</h5>
+        <p><strong id="workerName"></strong></p>
+        <p>Experience: <span id="workerExp"></span> years</p>
+
+        <hr>
+
+        <button class="btn btn-primary w-100" onclick="handleBooking()">
+          Book Now
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// SERVICE DATA (DYNAMIC)
+const services = {
+  cleaning: {
+    title: "Home Cleaning",
+    desc: "Professional deep cleaning for your home with trained staff.",
+    price: "₹900",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952",
+    worker: "Sneha",
+    exp: 5
+  },
+  electric: {
+    title: "Electric Repair",
+    desc: "Quick and safe electrical repair services.",
+    price: "₹300",
+    image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4",
+    worker: "Saniya",
+    exp: 4
+  },
+  plumbing: {
+    title: "Plumbing",
+    desc: "Fix leaks, taps, and pipes with expert plumbers.",
+    price: "₹450",
+    image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39",
+    worker: "Vinay ",
+    exp: 6
+  },
+  carpenter: {
+  title: "Carpenter",
+  desc: "Furniture repair and wood work services.",
+  price: "₹300",
+  image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e",
+  worker: "Astik",
+  exp: 6
+},
+
+painter: {
+  title: "Painter",
+  desc: "Professional wall painting & home decor.",
+  price: "₹500",
+  image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828",
+  worker: "Utkarsh",
+  exp: 6
+},
+
+teacher: {
+  title: "Teacher",
+  desc: "Home tuition for all classes.",
+  price: "₹800",
+  image: "https://images.unsplash.com/photo-1588072432836-e10032774350",
+  worker: "Ankit",
+  exp: 6
+}
+};
+
+// GET URL PARAM
+const params = new URLSearchParams(window.location.search);
+const serviceKey = params.get("service");
+
+// LOAD DATA
+const service = services[serviceKey];
+
+document.getElementById("serviceTitle").innerText = service.title;
+document.getElementById("serviceDesc").innerText = service.desc;
+document.getElementById("servicePrice").innerText = service.price;
+document.getElementById("serviceImage").src = service.image;
+document.getElementById("workerName").innerText = service.worker;
+document.getElementById("workerExp").innerText = service.exp;
+
+
+// BOOKING FUNCTION
+function handleBooking(){
+  Swal.fire({
+    icon: 'warning',
+    title: 'Login Required',
+    text: 'Please signup/login first to continue booking',
+    confirmButtonText: 'Go to Signup'
+  }).then(() => {
+    window.location.href = "signup.html";
+  });
+}
+</script>
+
+</body>
+</html>

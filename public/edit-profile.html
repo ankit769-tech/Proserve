@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Profile - ProServe</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+body {
+    background: #f4f7fb;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* CARD */
+.edit-card {
+    max-width: 550px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.title {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* INPUT */
+.form-control {
+    border-radius: 10px;
+    padding: 12px;
+}
+
+/* BUTTON */
+.btn-save {
+    width: 100%;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+/* MOBILE */
+@media(max-width:576px){
+    .edit-card{
+        margin:20px;
+        padding:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-primary px-4">
+    <a href="profile.html" class="navbar-brand fw-bold">← Back</a>
+</nav>
+
+<div class="edit-card">
+
+    <h3 class="title">Edit Profile</h3>
+
+    <form id="editForm">
+
+        <!-- NAME -->
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="name" class="form-control" required>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" id="email" class="form-control" required>
+        </div>
+
+        <!-- PHONE -->
+        <div class="mb-3">
+            <label class="form-label">Mobile Number</label>
+            <input type="text" id="phone" class="form-control" required>
+        </div>
+
+        <!-- ADDRESS -->
+        <div class="mb-3">
+            <label class="form-label">Address</label>
+            <input type="text" id="address" class="form-control">
+        </div>
+
+        <!-- SAVE BUTTON -->
+        <button type="submit" class="btn btn-primary btn-save">
+            <i class="fas fa-save me-1"></i> Save Changes
+        </button>
+
+    </form>
+
+</div>
+
+<script src="/js/api.js"></script>
+
+<script>
+
+// LOAD USER DATA (PREFILL)
+async function loadUser() {
+    try {
+        const user = await loadProfile();
+
+        document.getElementById("name").value = user.name || "";
+        document.getElementById("email").value = user.email || "";
+        document.getElementById("phone").value = user.phone || "";
+        document.getElementById("address").value = user.profile?.Address || "";
+
+    } catch (err) {
+        console.error(err);
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Failed to load user data"
+        });
+    }
+}
+
+loadUser();
+
+
+// SAVE UPDATED DATA
+document.getElementById("editForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const btn = document.querySelector(".btn-save");
+    btn.innerHTML = "Saving...";
+    btn.disabled = true;
+
+    const updatedData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        profile: {
+            Address: document.getElementById("address").value
+        }
+    };
+
+    try {
+        await updateProfile(updatedData);
+
+        await Swal.fire({
+            icon: "success",
+            title: "Profile Updated",
+            text: "Your changes have been saved successfully!",
+            confirmButtonColor: "#0d6efd"
+        });
+
+        window.location.href = "profile.html";
+
+    } catch (err) {
+        console.error(err);
+
+        Swal.fire({
+            icon: "error",
+            title: "Update Failed",
+            text: err.message || "Something went wrong!",
+            confirmButtonColor: "#dc3545"
+        });
+
+    } finally {
+        btn.innerHTML = '<i class="fas fa-save me-1"></i> Save Changes';
+        btn.disabled = false;
+    }
+});
+
+</script>

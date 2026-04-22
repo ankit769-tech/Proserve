@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard - ProServe</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- sweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --secondary: #6c757d;
+            --success: #198754;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+
+        body {
+            background: #f3f6fb;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 80px;
+
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: auto;
+            padding: 24px 20px;
+        }
+
+        /* Navbar */
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        /* Navbar Logo Styling */
+.nav-logo {
+    height: 40px;
+    width: auto;
+    transform: scale(1.15);
+    transform-origin: left center;
+}
+
+
+
+@media (max-width: 768px) {
+    .nav-logo {
+        height: 50px;
+        transform: scale(1);
+    }
+}
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: linear-gradient(125deg, #0b5ed7 0%, #0a58ca 45%, #084298 100%);
+            color: white;
+            border-radius: 28px;
+            padding: 28px 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 15px 30px -12px rgba(13, 110, 253, 0.35);
+            transition: all 0.2s;
+        }
+
+        .welcome-text {
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(4px);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        /* Dashboard Cards {Quick action)*/
+        /* FIX QUICK ACTION ROW */
+        .quick-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .quick-col {
+            flex: 1;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #0d6efd;
+        }
+
+        .section-title {
+            font-weight: 700;
+            margin: 20px 0 10px;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Hide badge by default */
+        .dashboard-card .card-badge {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: 0.3s ease;
+        }
+
+        /* Show badge on hover */
+        .dashboard-card:hover .card-badge {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark);
+        }
+
+
+
+        /* Recent Activity */
+        .activity-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            color: var(--secondary);
+            font-size: 0.8rem;
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            margin-top: 10px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+        }
+
+        /* Quick Stats */
+        .quick-stat {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Service Categories */
+        .category-card {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .user-stats {
+                flex-wrap: wrap;
+            }
+
+            .welcome-text {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Become a Service Provider */
+        .cta-section {
+            background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+            color: white;
+            padding: 60px 20px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+  
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #0d6efd, #084298);
+            color: white;
+            padding: 50px 20px;
+            margin-top: 50px;
+            min-height: 220px;
+            
+        }
+
+        /* Links */
+        .footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: white;
+        }
+
+        /* Logo */
+        .footer-logo {
+            max-width: 500px;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .footer-logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Social Icons */
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover Effects */
+        .social-icons a:hover {
+            background: white;
+            color: #0d6efd;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .footer-logo {
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4 py-2 fixed-top shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="user ProServe_logo.png" alt="ProServe Logo" class="nav-logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="services.html"><i class="fas fa-concierge-bell me-1"></i> Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="user-dashboard.html"><i class="fas fa-tachometer-alt me-1"></i>
+                            Dashboard</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i> <span id="navUserName">User</span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end slide-up">
+                            <li><a class="dropdown-item hover-up" href="profile.html"><i
+                                        class="fas fa-user-circle me-2"></i>Profile</a></li>
+                            <li><a class="dropdown-item hover-up" href="edit-profile.html"><i
+                                        class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
+                            <li><a class="dropdown-item hover-up" href="notification.html"><i
+                                        class="fas fa-bell me-2"></i>Notifications</a></li>
+                            <li><a class="dropdown-item hover-up" href="become-provider.html"><i
+                                        class="fas fa-wallet me-2"></i>Become a Service Provider</a></li>
+                            <li><a class="dropdown-item hover-up" href="change-password.html"><i
+                                        class="fas fa-lock me-2"></i>Change Password</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger hover-up" href="#" onclick="handleLogout()"><i
+                                        class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+
+                    <script>
+                        // Fullname set in dropdown (NO UI change)
+                        document.addEventListener("DOMContentLoaded", () => {
+                            const name = localStorage.getItem("ps_name") || "Ankit";
+                            document.getElementById("navUserName").innerText = name;
+                        });
+
+                        // logout function with function with sweetalert popup
+                        function handleLogout() {
+
+                            Swal.fire({
+                                title: "Logging out...",
+                                text: "Please wait",
+                                icon: "info",
+                                showConfirmButton: false,
+                                timer: 1200,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+
+                            // Clear storage
+                            localStorage.removeItem("ps_token");
+                            localStorage.removeItem("ps_user");
+                            localStorage.removeItem("ps_name");
+
+                            setTimeout(() => {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Logged Out",
+                                    text: "You have been logged out successfully",
+                                    confirmButtonColor: "#0d6efd"
+                                }).then(() => {
+                                    window.location.href = "index.html";
+                                });
+                            }, 1200);
+                        }
+                    </script>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 id="helloUser" class="welcome-text">Hello, User! 👋</h1>
+                    <p class="mb-0">Here's what's happening with your services today.</p>
+
+                    <div class="user-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-calendar-week me-1"></i>
+                            <span>Upcoming Bookings</span>
+                        </div>
+                        <!-- <div class="stat-item">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>2 Unread Messages</span>
+                        </div> -->
+                        <div class="stat-item">
+                            <i class="fas fa-trophy me-1"></i>
+                            <span>Completed Services</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <div class="quick-stat">
+                        <div class="stat-value">4.8</div>
+                        <div class="stat-label">Your Rating</div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+
+
+            <!-- Quick Actions -->
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-bolt me-2"></i>Quick Actions</h2>
+            </div>
+
+            <div class="quick-row mb-4">
+
+                <div class="quick-col">
+                    <a href="service-listing.html" class="text-decoration-none">
+                        <div class="dashboard-card text-center">
+                            <div class="card-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
+                            <h5 class="card-title">Explore</h5>
+                            <p class="card-description">Find Pro nearby</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="quick-col">
+                    <a href="booking.html" class="text-decoration-none">
+                        <div class="dashboard-card text-center">
+                            <div class="card-icon"><i class="fas fa-calendar-plus"></i></div>
+                            <h5 class="card-title">Book Now</h5>
+                            <p class="card-description">Schedule service</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="quick-col">
+                    <a href="#" class="text-decoration-none">
+                        <div class="dashboard-card text-center">
+                            <div class="card-icon text-success"><i class="fas fa-clipboard-list"></i></div>
+                            <h5 class="card-title">My Bookings</h5>
+                            <p class="card-description">Track services</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="quick-col">
+                    <a href="chat-advanced.html" class="text-decoration-none">
+                        <div class="dashboard-card text-center">
+                            <div class="card-icon"><i class="fas fa-comments"></i></div>
+                            <h5 class="card-title">Messages</h5>
+                            <p class="card-description">Chat with providers</p>
+                            <span class="card-badge">2</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="quick-col">
+                    <a href="notification.html" class="text-decoration-none">
+                        <div class="dashboard-card text-center">
+                            <div class="card-icon"><i class="fas fa-bell"></i></div>
+                            <h5 class="card-title">Notifications</h5>
+                            <p class="card-description">Stay Updates</p>
+                            <span class="card-badge">5</span>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Upcoming Bookings -->
+            <div class="section-header">
+                <h2 class="section-title" id="upcoming-booking"><i class="fas fa-calendar-alt me-2"></i>Upcoming
+                    Bookings</h2>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded p-2">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Plumbing Service</h6>
+                        <small class="text-muted">Tomorrow, 10:00 AM</small>
+                    </div>
+                    <span class="badge bg-warning">Confirmed</span>
+                </div>
+
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success bg-opacity-10 text-success rounded p-2">
+                            <i class="fas fa-broom"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Home Cleaning</h6>
+                        <small class="text-muted">Mar 15, 2:00 PM</small>
+                    </div>
+                    <span class="badge bg-primary">Scheduled</span>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-info bg-opacity-10 text-info rounded p-2">
+                            <i class="fas fa-paint-roller"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-0">Painting Service</h6>
+                        <small class="text-muted">Mar 18, 9:00 AM</small>
+                    </div>
+                    <span class="badge bg-secondary">Pending</span>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="#" class="btn btn-outline-primary btn-sm">View All Bookings</a>
+                </div>
+            </div>
+
+
+            <!-- Recent Activity -->
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-history me-2"></i>Recent Activity</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-chevron-right ms-1"></i></a>
+            </div>
+
+            <div class="dashboard-card">
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon bg-success bg-opacity-10 text-success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Service Completed</div>
+                            <div class="activity-desc">Electrician service by Raj Sharma</div>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                        <div>
+                            <a href="rate-service"><button class="btn btn-sm btn-outline-primary">Rate</button></a>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon bg-primary bg-opacity-10 text-primary">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Booking Confirmed</div>
+                            <div class="activity-desc">Plumbing service scheduled for tomorrow</div>
+                            <div class="activity-time">5 hours ago</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon bg-info bg-opacity-10 text-info">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">New Message</div>
+                            <div class="activity-desc">From carpenter service provider</div>
+                            <div class="activity-time">Yesterday</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon bg-warning bg-opacity-10 text-warning">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Rating Received</div>
+                            <div class="activity-desc">5 stars for your last booking</div>
+                            <div class="activity-time">2 days ago</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+
+            <!-- Popular Services
+            <div class="section-header mt-4">
+                <h2 class="section-title"><i class="fas fa-fire me-2"></i>Popular Services</h2>
+                <a href="services.html" class="view-all">Browse All <i class="fas fa-chevron-right ms-1"></i></a>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-6 col-md-4">
+                    <a href="services.html?category=electrician" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon"><i class="fas fa-bolt"></i></div>
+                            <div class="category-name fw-semibold">Electrician</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4">
+                    <a href="services.html?category=plumber" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon"><i class="fas fa-faucet"></i></div>
+                            <div class="category-name fw-semibold">Plumber</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4">
+                    <a href="services.html?category=cleaning" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon"><i class="fas fa-broom"></i></div>
+                            <div class="category-name fw-semibold">Cleaning</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4">
+                    <a href="services.html?category=carpenter" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon"><i class="fas fa-hammer"></i></div>
+                            <div class="category-name fw-semibold">Carpenter</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4">
+                    <a href="services.html?category=painter" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon"><i class="fas fa-paint-roller"></i></div>
+                            <div class="category-name fw-semibold">Painter</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-6 col-md-4">
+                    <a href="services.html?category=ac" class="text-decoration-none">
+                        <div class="category-card">
+                            <div class="category-icon"><i class="fas fa-wind"></i></div>
+                            <div class="category-name fw-semibold">AC Repair</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div> -->
+
+
+        <!-- Combined Section: Provider + Support -->
+<div class="row g-4 mt-4">
+
+    <!-- Become Provider -->
+    <div class="col-md-6">
+        <div class="dashboard-card h-100 text-center provider-card">
+            <div class="card-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h4 class="fw-bold">Become a Service Provider</h4>
+            <p>Start earning by offering your services on ProServe platform</p>
+            <a href="signup-Worker.html" class="btn btn-primary mt-2">
+                Get Started
+            </a>
+        </div>
+    </div>
+
+    <!-- Help & Support -->
+    <div class="col-md-6">
+        <div class="dashboard-card h-100 text-center support-card">
+            <div class="card-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <h4 class="fw-bold">Help & Support</h4>
+            <p>We’re here to assist you anytime</p>
+            <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
+                <a href="user-support.html" class="btn btn-primary">Contact</a>
+                <a href="FAQ-USER.html" class="btn btn-outline-primary">FAQ</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+            <!-- Become a Service Provider -->
+          <!--  <section class="cta-section">
+                <div class="container text-center py-4">
+                    <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
+                    <p class="lead mb-4">Join thousands of satisfied customers and service providers</p>
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                        <a href="signup-Worker.html" class="btn btn-light btn-lg">Become a Service Provider</a>
+                    </div>
+                </div>
+            </section> -->
+
+
+            <!-- Support Card -->
+            <!-- <div class="section-header mt-4">
+                <h2 class="section-title"><i class="fas fa-headset me-2"></i>Help & Support</h2>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon text-center mb-3">
+                    <i class="fas fa-question-circle text-primary"></i>
+                </div>
+                <h5 class="card-title text-center">Need Help?</h5>
+                <p class="card-description text-center">Our support team is here to help you with any questions</p>
+                <div class="d-grid gap-2">
+                    <a href="user-support.html" class="btn btn-primary">Contact Support</a>
+                    <a href="FAQ-USER.html" class="btn btn-outline-primary">View FAQ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div> -->
+
+    <!-- FOOTER -->
+    <footer class="footer" id="footer">
+        <div class="container">
+
+            <div class="row g-4 align-items-center">
+
+                <!-- LEFT -->
+                <div class="col-lg-4 text-center text-lg-start">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-tools me-2"></i>ProServe
+                    </h5>
+                    <p class="text-white-50">
+                        Connecting you with trusted professionals for all your home service needs.
+                    </p>
+
+                    <div class="social-icons d-flex justify-content-center justify-content-lg-start gap-3">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- CENTER LOGO -->
+                <div class="col-lg-4 text-center">
+                    <img src="ProServe logo.png" alt="ProServe Logo" class="footer-logo">
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-lg-4 text-center text-lg-end">
+                    <h5 class="fw-bold text-white mb-3">Contact Us</h5>
+                    <ul class="list-unstyled text-white-50">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Kalkaji, New Delhi</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i>7370503936</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@proserve.com</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <hr class="my-4 border-light">
+
+            <!-- BOTTOM -->
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-white-50 mb-0">&copy; 2026 ProServe. All rights reserved.</p>
+                </div>
+
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="about.html" class="text-white-50 text-decoration-none me-3">About Us</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
+                    <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const name = localStorage.getItem("ps_name") || "User";
+            document.getElementById("helloUser").innerText = "Hello, " + name + "👋";
+        });
+    </script>
+
+
+</body>
+
+</html>

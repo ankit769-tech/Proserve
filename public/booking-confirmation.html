@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - ProServe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{
+            background:#eef1f6;
+        }
+        .confirmation-box{
+            max-width:650px;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.1);
+        }
+        .captcha-box{
+            letter-spacing:5px;
+            font-size:24px;
+            background:#f1f1f1;
+            padding:10px;
+            border-radius:8px;
+            text-align:center;
+            font-weight:bold;
+            user-select:none;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
+    <a href="index.html" class="navbar-brand fw-bold">ProServe</a>
+</nav>
+
+<div class="container my-5">
+
+    <div class="confirmation-box mx-auto">
+        
+        <h3 class="fw-bold mb-3 text-center">Confirm Your Booking</h3>
+        <p class="text-muted text-center mb-4">Please verify your booking details and complete the captcha.</p>
+
+        <h5 class="fw-bold">Service Summary</h5>
+        <p><strong>Service:</strong> Fan Repair</p>
+        <p><strong>Worker:</strong> Ramesh Kumar</p>
+        <p><strong>Date & Time:</strong> 25 Nov, 5:00 PM</p>
+        <p><strong>Address:</strong> New Delhi, India</p>
+        <p><strong>Total Amount:</strong> ₹300</p>
+
+        <hr class="my-4">
+
+        <h5 class="fw-bold mb-2">Security Check (Captcha)</h5>
+
+        <div class="captcha-box mb-3" id="captchaText"></div>
+
+        <div class="input-group mb-3">
+            <input type="text" id="captchaInput" class="form-control" placeholder="Enter captcha">
+            <button class="btn btn-outline-secondary" onclick="generateCaptcha()">Refresh</button>
+        </div>
+
+        <div id="captchaError" class="text-danger mb-3" style="display:none;">
+            ❌ Incorrect captcha. Please try again.
+        </div>
+
+        <div id="captchaSuccess" class="text-success mb-3" style="display:none;">
+            ✔ Captcha Matched Successfully!
+        </div>
+
+        <button class="btn btn-primary w-100 py-2" onclick="confirmBooking()">Confirm Booking</button>
+    </div>
+
+</div>
+
+<script>
+    // Generate random captcha
+    function generateCaptcha(){
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let captcha = "";
+        for(let i=0; i<6; i++){
+            captcha += chars[Math.floor(Math.random() * chars.length)];
+        }
+        document.getElementById("captchaText").innerText = captcha;
+    }
+
+    generateCaptcha(); // Initial load
+
+    function confirmBooking() {
+        const realCaptcha = document.getElementById("captchaText").innerText.trim();
+        const userCaptcha = document.getElementById("captchaInput").value.trim();
+
+        document.getElementById("captchaError").style.display = "none";
+        document.getElementById("captchaSuccess").style.display = "none";
+
+        if(userCaptcha === realCaptcha){
+            document.getElementById("captchaSuccess").style.display = "block";
+
+            setTimeout(() => {
+                window.location.href = "booking-success.html"; 
+            }, 1200);
+
+        } else {
+            document.getElementById("captchaError").style.display = "block";
+        }
+    }
+</script>
+
+<script src="/js/api.js"></script>
+
+
+</body>
+</html>

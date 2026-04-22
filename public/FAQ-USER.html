@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ - ProServe</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+  --primary:#0d6efd;
+  --light:#f3f6fb;
+}
+
+body {
+  background: var(--light);
+  font-family: 'Segoe UI';
+}
+
+/* HEADER */
+.faq-header {
+  background: linear-gradient(135deg,#0d6efd,#084298);
+  color: white;
+  padding: 50px 20px;
+  text-align: center;
+  border-radius: 0 0 30px 30px;
+}
+
+.search-box {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+/* CATEGORY BUTTONS */
+.category-btn {
+  border-radius: 50px;
+  padding: 8px 18px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+.category-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* FAQ CARD */
+.faq-card {
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  padding: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.faq-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.faq-answer {
+  display: none;
+  margin-top: 10px;
+  color: #6c757d;
+}
+
+.faq-card.active .faq-answer {
+  display: block;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="faq-header">
+  <h2>Frequently Asked Questions</h2>
+  <p>Find answers to your questions instantly</p>
+
+  <div class="search-box">
+    <input type="text" id="searchFAQ" class="form-control" placeholder="Search questions...">
+  </div>
+</div>
+
+<div class="container my-5">
+
+  <!-- CATEGORY FILTER -->
+  <div class="text-center mb-4">
+    <button class="category-btn active" onclick="filterFAQ('all')">All</button>
+    <button class="category-btn" onclick="filterFAQ('booking')">Booking</button>
+    <button class="category-btn" onclick="filterFAQ('payment')">Payment</button>
+    <button class="category-btn" onclick="filterFAQ('account')">Account</button>
+    <button class="category-btn" onclick="filterFAQ('support')">Support</button>
+  </div>
+
+  <!-- FAQ LIST -->
+  <div id="faqList">
+
+    <!-- BOOKING -->
+    <div class="faq-card" data-category="booking">
+      <strong>How do I book a service?</strong>
+      <div class="faq-answer">Go to Services → Select service → Choose date & confirm booking.</div>
+    </div>
+
+    <div class="faq-card" data-category="booking">
+      <strong>Can I cancel or reschedule booking?</strong>
+      <div class="faq-answer">Yes, go to My Bookings and select Cancel/Reschedule option.</div>
+    </div>
+
+    <!-- PAYMENT -->
+    <div class="faq-card" data-category="payment">
+      <strong>What payment methods are accepted?</strong>
+      <div class="faq-answer">We accept UPI, Debit/Credit cards, and Wallet payments.</div>
+    </div>
+
+    <div class="faq-card" data-category="payment">
+      <strong>When will I get my refund?</strong>
+      <div class="faq-answer">Refunds are processed within 3–5 working days.</div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div class="faq-card" data-category="account">
+      <strong>How do I update my profile?</strong>
+      <div class="faq-answer">Go to Profile → Edit Profile → Save changes.</div>
+    </div>
+
+    <div class="faq-card" data-category="account">
+      <strong>Is my data secure?</strong>
+      <div class="faq-answer">Yes, we use secure encryption to protect your data.</div>
+    </div>
+
+    <!-- SUPPORT -->
+    <div class="faq-card" data-category="support">
+      <strong>How can I contact support?</strong>
+      <div class="faq-answer">Use live chat or contact support page.</div>
+    </div>
+
+    <div class="faq-card" data-category="support">
+      <strong>Do you provide 24/7 support?</strong>
+      <div class="faq-answer">Yes, our support team is available 24/7.</div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// TOGGLE FAQ
+document.querySelectorAll(".faq-card").forEach(card => {
+  card.addEventListener("click", () => {
+    card.classList.toggle("active");
+  });
+});
+
+// SEARCH FUNCTION
+document.getElementById("searchFAQ").addEventListener("keyup", function() {
+  let value = this.value.toLowerCase();
+  document.querySelectorAll(".faq-card").forEach(card => {
+    card.style.display = card.innerText.toLowerCase().includes(value) ? "block" : "none";
+  });
+});
+
+// CATEGORY FILTER
+function filterFAQ(category) {
+  document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
+  event.target.classList.add("active");
+
+  document.querySelectorAll(".faq-card").forEach(card => {
+    if(category === "all" || card.dataset.category === category){
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - ProServe</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+body {
+    background: #f4f7fb;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* CARD */
+.profile-card {
+    max-width: 520px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+/* IMAGE */
+.profile-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #0d6efd;
+    cursor: pointer;
+}
+
+/* UPLOAD ICON */
+.upload-box {
+    position: relative;
+    display: inline-block;
+}
+
+.upload-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    padding: 8px;
+    font-size: 12px;
+}
+
+/* NAME */
+.user-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 12px;
+}
+
+/* INFO */
+.info-box {
+    margin-top: 25px;
+    text-align: left;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-label {
+    color: #6c757d;
+}
+
+.info-value {
+    font-weight: 600;
+}
+
+/* BUTTON */
+.save-btn {
+    margin-top: 25px;
+    width: 100%;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* MOBILE */
+@media(max-width:576px){
+    .profile-card{
+        margin:20px;
+        padding:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-primary px-4">
+    <a href="index.html" class="navbar-brand fw-bold">ProServe</a>
+</nav>
+
+<div class="profile-card">
+
+    <!-- PROFILE IMAGE -->
+    <div class="upload-box">
+        <img id="profileImage" src="https://i.ibb.co/2kR6Z6z/default-user.png" class="profile-img">
+        <label for="fileInput" class="upload-icon">
+            <i class="fas fa-camera"></i>
+        </label>
+        <input type="file" id="fileInput" hidden>
+    </div>
+
+    <!-- NAME -->
+    <div class="user-name" id="userName">Loading...</div>
+
+    <!-- INFO -->
+    <div class="info-box">
+
+        <div class="info-item">
+            <span class="info-label">Email</span>
+            <span class="info-value" id="userEmail">-</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">Mobile</span>
+            <span class="info-value" id="userPhone">-</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">Address</span>
+            <span class="info-value" id="userAddress">-</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">Member Since</span>
+            <span class="info-value" id="userJoined">-</span>
+        </div>
+
+    </div>
+
+    <!-- SAVE BUTTON -->
+    <button class="btn btn-primary save-btn" onclick="saveProfile()">
+        <i class="fas fa-save me-1"></i> Save Changes
+    </button>
+
+</div>
+
+<script src="/js/api.js"></script>
+
+<script>
+
+let selectedFile = null;
+
+// LOAD USER DATA
+async function loadUser() {
+    try {
+        const user = await loadProfile();
+
+        document.getElementById("userName").innerText = user.name || "User";
+        document.getElementById("userEmail").innerText = user.email || "-";
+        document.getElementById("userPhone").innerText = user.phone || "-";
+        document.getElementById("userAddress").innerText = user.profile?.Address || "-";
+
+        // JOIN DATE
+        if(user.createdAt){
+            const d = new Date(user.createdAt);
+            document.getElementById("userJoined").innerText =
+                d.toLocaleDateString("en-IN", { year: "numeric", month: "long" });
+        }
+
+        // PROFILE IMAGE
+        if(user.profileImage){
+            document.getElementById("profileImage").src = user.profileImage;
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to load profile");
+    }
+}
+
+loadUser();
+
+
+// IMAGE SELECT
+document.getElementById("fileInput").addEventListener("change", function () {
+    selectedFile = this.files[0];
+
+    if (!selectedFile) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+        document.getElementById("profileImage").src = reader.result;
+    };
+    reader.readAsDataURL(selectedFile);
+});
+
+
+// SAVE CHANGES (ONLY IMAGE)
+async function saveProfile() {
+
+    if (!selectedFile) {
+        alert("No changes to save");
+        return;
+    }
+
+    try {
+        let fd = new FormData();
+        fd.append('files', selectedFile);
+
+        // Upload image
+        const res = await apiUpload('/users/me/upload-verification', fd);
+
+        // Update user profileImage manually
+        await updateProfile({
+            profileImage: res.documents?.[0] || ""
+        });
+
+        alert("Profile updated successfully");
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to save");
+    }
+}
+
+</script>
+
+</body>
+</html>

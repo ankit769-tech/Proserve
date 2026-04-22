@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - ProServe</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body{background:#f2f4f7;}
+        .payment-box{
+            max-width:600px;
+            background:white;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary px-4">
+    <a href="index.html" class="navbar-brand fw-bold">ProServe</a>
+</nav>
+
+<div class="container my-5">
+
+    <div class="payment-box mx-auto">
+
+        <h3 class="fw-bold mb-4 text-center">Payment</h3>
+
+        <h5 class="fw-bold">Order Summary</h5>
+        <p class="mb-1">Service: <strong>Fan Repair</strong></p>
+        <p class="mb-1">Worker: <strong>Ramesh Kumar</strong></p>
+        <p class="mb-3">Price: <strong>₹300</strong></p>
+
+        <hr>
+
+        <h5 class="fw-bold mb-3">Select Payment Method</h5>
+
+        <div class="form-check mb-2">
+            <input type="radio" class="form-check-input" name="pay" checked>
+            <label class="form-check-label">UPI (GPay, PhonePe)</label>
+        </div>
+
+        <div class="form-check mb-2">
+            <input type="radio" class="form-check-input" name="pay">
+            <label class="form-check-label">Credit / Debit Card</label>
+        </div>
+
+        <div class="form-check mb-2">
+            <input type="radio" class="form-check-input" name="pay">
+            <label class="form-check-label">Cash on Delivery</label>
+        </div>
+
+        <button class="btn btn-primary w-100 mt-3 py-2">Pay ₹300</button>
+
+    </div>
+
+</div>
+
+<script src="/js/api.js"></script>
+
+
+</body>
+</html>
