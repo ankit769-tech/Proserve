@@ -32,42 +32,46 @@
       padding: 15px 40px;
       background: white;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      /* nav is fixed */
       position: sticky;
       top: 0;
       z-index: 1000;
     }
-/* LOGO CONTAINER */
-.logo {
-  display: flex;
-  align-items: center;
-}
 
-/* LOGO IMAGE */
-.logo img {
-  height: 40px;   /* fits inside your 60–70px navbar */
-  width: auto;
-  object-fit: contain;
-}
+    /* LOGO CONTAINER */
+    .logo {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
 
-/* MOBILE NAVBAR FIX */
-@media (max-width: 768px) {
+    /* LOGO IMAGE (MAIN FIX) */
+    .logo img {
+    height: 40px;
+    width: auto;
+    transform: scale(1.15);
+    transform-origin: left center;
+    }
 
-  .navbar {
-    padding: 10px 20px;
-  }
+    @media (max-width: 768px) {
 
-  .logo img {
-    height: 35px;
-  }
+      .navbar {
+        padding: 10px 20px;
+        /* slight reduce for mobile */
+      }
 
-  .menu {
-    display: none;   /* hide menu on mobile */
-  }
+      .logo img {
+        max-height: 40px;
+      }
 
-  .buttons {
-    display: none;   /* hide buttons on mobile */
-  }
-}
+      .menu {
+        display: none;
+      }
+
+      .buttons {
+        display: none;
+      }
+    }
 
     /* PUSH RIGHT SECTION */
     .right-section {
@@ -129,6 +133,8 @@
     .search-box {
       max-width: 700px;
       margin: 20px auto;
+
+     
     }
 
     /* Emoji Category Icons */
@@ -171,28 +177,89 @@
     }
 
     .service-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
     }
 
-    /* Backend Section */
-    .backend-card {
-      background: white;
-      padding: 14px;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
-      transition: transform 0.3s ease;
+    /* WRAPPER */
+    .slider-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 0 30px;
+      /* creates space for buttons */
     }
 
-    .backend-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .backend-card img {
-      height: 140px;
+    /* VIEWPORT */
+    .slider-viewport {
+      overflow: hidden;
       width: 100%;
-      object-fit: cover;
-      border-radius: 10px;
     }
+
+    /* TRACK */
+    .slider-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    /* GROUP (3 CARDS) */
+    .service-group {
+      min-width: 100%;
+      display: flex;
+      gap: 20px;
+    }
+
+    /* CARD */
+    .service-card {
+      flex: 1;
+    }
+
+    /* BUTTONS */
+    .slider-btn {
+      position: absolute;
+      top: 45%;
+      transform: translateY(-50%);
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #0d6efd, #0a58ca);
+      color: white;
+      font-size: 16px;
+      box-shadow: 0 6px 18px rgba(13, 110, 253, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .slider-btn:hover {
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 8px 25px rgba(13, 110, 253, 0.5);
+    }
+
+    .slider-btn.left {
+      left: -25px;
+    }
+
+    .slider-btn.right {
+      right: -25px;
+    }
+
+    @media (max-width: 768px) {
+      .service-group {
+        flex-direction: column;
+      }
+
+      .slider-btn {
+        display: none;
+        /* optional for mobile */
+      }
+    }
+
+ 
 
     /* Features Section */
     .feature-box {
@@ -232,6 +299,25 @@
       font-size: 1.8rem;
     }
 
+    /* Backend Cards */
+    .backend-card {
+      background: white;
+      padding: 14px;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease;
+    }
+
+    .backend-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .backend-card img {
+      height: 140px;
+      width: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
 
     /* CTA Section */
     .cta-section {
@@ -308,10 +394,10 @@
   <nav class="navbar">
 
     <div class="logo">
-  <a href="index.html">
-    <img src="ProServe nav_logo.png" alt="ProServe Logo">
-  </a>
-</div>
+      <a href="index.html">
+        <img src="ProServe nav_logo.png" alt="ProServe Logo">
+      </a>
+    </div>
 
     <!-- RIGHT SIDE (MENU + BUTTONS) -->
     <div class="right-section">
@@ -321,6 +407,8 @@
         <a href="#services">Services</a>
         <a href="#how-it-works">How it Works</a>
         <a href="contact.html">Contact Us</a>
+        
+
       </div>
 
       <!-- BUTTONS -->
@@ -505,53 +593,100 @@
   <!-- POPULAR SERVICES -->
   <section class="pb-5" id="services">
     <div class="container">
-      <div class="d-flex justify-content-between mb-3">
-        <h3 class="mb-0">Popular Services</h3>
-        <!-- <small class="text-muted">Top booked this month</small> -->
+
+      <h3 class="mb-3">Popular Services</h3>
+
+      <div class="slider-wrapper">
+
+        <!-- LEFT BUTTON -->
+        <button class="slider-btn left" onclick="slideServices(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <!-- SLIDER VIEW -->
+        <div class="slider-viewport">
+          <div class="slider-track" id="serviceTrack">
+
+            <!-- GROUP 1 -->
+            <div class="service-group">
+
+              <!-- CARD 1 -->
+              <div class="card service-card">
+                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952" class="card-img-top">
+                <div class="card-body">
+                  <h5>Home Cleaning</h5>
+                  <p class="text-muted">Starting ₹900</p>
+                  <a href="Service_details.html?service=cleaning" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+              </div>
+
+              <!-- CARD 2 -->
+              <div class="card service-card">
+                <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4" class="card-img-top">
+                <div class="card-body">
+                  <h5>Electric Repair</h5>
+                  <p class="text-muted">Starting ₹300</p>
+                  <a href="Service_details.html?service=electric" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+              </div>
+
+              <!-- CARD 3 -->
+              <div class="card service-card">
+                <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39" class="card-img-top">
+                <div class="card-body">
+                  <h5>Plumbing</h5>
+                  <p class="text-muted">Starting ₹450</p>
+                  <a href="Service_details.html?service=plumbing" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- GROUP 2 -->
+            <div class="service-group">
+
+              <!-- NEW: CARPENTER -->
+              <div class="card service-card">
+                <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e" class="card-img-top">
+                <div class="card-body">
+                  <h5>Carpenter</h5>
+                  <p class="text-muted">Furniture & repair</p>
+                  <a href="Service_details.html?service=carpenter" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+              </div>
+
+              <!-- NEW: PAINTER -->
+              <div class="card service-card">
+                <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828" class="card-img-top">
+                <div class="card-body">
+                  <h5>Painter</h5>
+                  <p class="text-muted">Wall painting</p>
+                  <a href="Service_details.html?service=painter" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+              </div>
+
+              <!-- NEW: TEACHER -->
+              <div class="card service-card">
+                <img src="https://images.unsplash.com/photo-1588072432836-e10032774350" class="card-img-top">
+                <div class="card-body">
+                  <h5>Teacher</h5>
+                  <p class="text-muted">Home tuition</p>
+                  <a href="Service_details.html?service=teacher" class="btn btn-primary btn-sm">Book Now</a>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT BUTTON -->
+        <button class="slider-btn right" onclick="slideServices(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
       </div>
 
-      <div class="row g-4">
-
-        <div class="col-md-4">
-          <div class="card service-card">
-            <img class="card-img-top"
-              src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=600"
-              alt="Home Cleaning">
-            <div class="card-body">
-              <h5 class="card-title">Home Cleaning</h5>
-              <p class="text-muted">Starting ₹900 • Verified staff</p>
-              <a href="Service_details.html?service=cleaning" class="btn btn-primary btn-sm">Book Now</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card service-card">
-            <img class="card-img-top"
-              src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=600"
-              alt="Electric Repair">
-            <div class="card-body">
-              <h5 class="card-title">Electric Repair</h5>
-              <p class="text-muted">Starting ₹300 • Fast service</p>
-              <a href="Service_details.html?service=electric" class="btn btn-primary btn-sm">Book Now</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card service-card">
-            <img class="card-img-top"
-              src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&h=600"
-              alt="Plumbing">
-            <div class="card-body">
-              <h5 class="card-title">Plumbing</h5>
-              <p class="text-muted">Starting ₹450 • Leak fixes</p>
-              <a href="Service_details.html?service=plumbing" class="btn btn-primary btn-sm">Book Now</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
   </section>
 
@@ -668,7 +803,7 @@
 
       </div>
     </div>
-  </section> 
+  </section>
 
   <!-- Reviews Section -->
   <section class="container my-5" id="reviews">
@@ -740,75 +875,75 @@
     </div>
   </section>
 
- <!-- CTA Section -->
-<section class="cta-section">
-  <div class="container text-center py-4">
-    <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
-    <p class="lead mb-4">Join thousands of satisfied customers and service providers</p>
-    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
-      <a href="signup-Worker.html" class="btn btn-light btn-lg">SignUp as Worker</a>
-      <a href="loginBlackBackend.html" class="btn btn-outline-light btn-lg">Sign In as Worker </a>
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container text-center py-4">
+      <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
+      <p class="lead mb-4">Join thousands of satisfied customers and service providers</p>
+      <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+        <a href="signup-Worker.html" class="btn btn-light btn-lg">SignUp as Worker</a>
+        <a href="loginBlackBackend.html" class="btn btn-outline-light btn-lg">Sign In as Worker </a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
- <!-- FOOTER -->
-<footer class="footer" id="footer">
-  <div class="container">
+  <!-- FOOTER -->
+  <footer class="footer" id="footer">
+    <div class="container">
 
-    <div class="row g-4 align-items-center">
+      <div class="row g-4 align-items-center">
 
-      <!-- LEFT -->
-      <div class="col-lg-4 text-center text-lg-start">
-        <h5 class="fw-bold mb-3">
-          <i class="fas fa-tools me-2"></i>ProServe
-        </h5>
-        <p class="text-white-50">
-          Connecting you with trusted professionals for all your home service needs.
-        </p>
+        <!-- LEFT -->
+        <div class="col-lg-4 text-center text-lg-start">
+          <h5 class="fw-bold mb-3">
+            <i class="fas fa-tools me-2"></i>ProServe
+          </h5>
+          <p class="text-white-50">
+            Connecting you with trusted professionals for all your home service needs.
+          </p>
 
-        <div class="social-icons d-flex justify-content-center justify-content-lg-start gap-3">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          <div class="social-icons d-flex justify-content-center justify-content-lg-start gap-3">
+            <a href="https://www.facebook.com/index.php/"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.twitter.com/index.php/"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/index.php/"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/index.php/"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+
+        <!-- CENTER LOGO -->
+        <div class="col-lg-4 text-center">
+          <img src="ProServe logo.png" alt="ProServe Logo" class="footer-logo">
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-4 text-center text-lg-end">
+          <h5 class="fw-bold text-white mb-3">Contact Us</h5>
+          <ul class="list-unstyled text-white-50">
+            <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Kalkaji, New Delhi</li>
+            <li class="mb-2"><i class="fas fa-phone me-2"></i>7370503936</li>
+            <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@proserve.com</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <hr class="my-4 border-light">
+
+      <!-- BOTTOM -->
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="text-white-50 mb-0">&copy; 2026 ProServe. All rights reserved.</p>
+        </div>
+
+        <div class="col-md-6 text-center text-md-end">
+          <a href="about.html" class="text-white-50 text-decoration-none me-3">About Us</a>
+          <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
+          <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
         </div>
       </div>
 
-      <!-- CENTER LOGO -->
-      <div class="col-lg-4 text-center">
-        <img src="ProServe logo.png" alt="ProServe Logo" class="footer-logo">
-      </div>
-
-      <!-- RIGHT -->
-      <div class="col-lg-4 text-center text-lg-end">
-        <h5 class="fw-bold text-white mb-3">Contact Us</h5>
-        <ul class="list-unstyled text-white-50">
-          <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Kalkaji, New Delhi</li>
-          <li class="mb-2"><i class="fas fa-phone me-2"></i>7370503936</li>
-          <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@proserve.com</li>
-        </ul>
-      </div>
-
     </div>
-
-    <hr class="my-4 border-light">
-
-    <!-- BOTTOM -->
-    <div class="row align-items-center">
-      <div class="col-md-6 text-center text-md-start">
-        <p class="text-white-50 mb-0">&copy; 2026 ProServe. All rights reserved.</p>
-      </div>
-
-      <div class="col-md-6 text-center text-md-end">
-        <a href="about.html" class="text-white-50 text-decoration-none me-3">About Us</a>
-        <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
-        <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
-      </div>
-    </div>
-
-  </div>
-</footer>
+  </footer>
 
 
   <!-- SCRIPTS -->
@@ -828,6 +963,25 @@
         992: { slidesPerView: 6 }
       }
     });
+
+
+    // Slider for Popular Services
+
+    let currentSlide = 0;
+
+    function slideServices(direction) {
+      const track = document.getElementById("serviceTrack");
+      const totalSlides = document.querySelectorAll(".service-group").length;
+
+      currentSlide += direction;
+
+      if (currentSlide < 0) currentSlide = 0;
+      if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+
+      track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+
   </script>
 
   <script src="/js/api.js"></script>
