@@ -1,0 +1,233 @@
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #e9ecef;
+  }
+
+  .main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .contact-box {
+    width: 900px;
+    height: 450px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    overflow: visible; /* FIXED (was hidden) */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .left {
+    width: 55%;
+    padding: 40px;
+  }
+
+  .left h2 {
+    margin-bottom: 10px;
+  }
+
+  .left p {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 30px;
+  }
+
+  .left input,
+  .left textarea {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 5px;
+    margin-bottom: 20px;
+    outline: none;
+  }
+
+  .left textarea {
+    resize: none;
+  }
+
+  .left button {
+    background: #0d6efd;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .right {
+    width: 45%;
+    background: linear-gradient(135deg, #00b4db, #0083b0);
+    position: relative;
+  }
+
+  /* ✅ FIXED CIRCLE */
+  .info-circle {
+    position: absolute;
+    top: 50%;
+    left: -110px; /* slightly more overlap */
+    transform: translateY(-50%);
+    background: white;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand i {
+    font-size: 28px;
+    color: #0d6efd;
+  }
+
+  .brand h3 {
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .details h5 {
+    margin: 10px 0 5px;
+    font-weight: 600;
+  }
+
+  .details p {
+    margin: 3px 0;
+    color: gray;
+    font-size: 14px;
+  }
+
+  .socials {
+    margin-top: 10px;
+  }
+
+  .socials i {
+    background: #f1f1f1;
+    padding: 8px;
+    font-size: 14px;
+    margin: 0 5px;
+    border-radius: 50%;
+  }
+
+  /* POPUP */
+  .custom-popup {
+    border-radius: 16px;
+    padding: 30px 20px;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .custom-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  .custom-text {
+    font-size: 16px;
+    color: #777;
+    margin-top: 10px;
+  }
+
+  .custom-button {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-top: 20px;
+  }
+
+  .swal2-icon.swal2-success {
+    border-color: #c8e6c9;
+    color: #4caf50;
+  }
+</style>
+
+<body>
+  <div class="main-container">
+    <div class="contact-box">
+
+      <!-- LEFT SIDE -->
+      <div class="left">
+        <h2>Contact Us</h2>
+        <p>Feel free to contact us if you have any question. We'll answer as soon as possible!</p>
+
+        <form id="contactForm">
+          <input type="text" name="name" placeholder="Name" required minlength="2" maxlength="50" pattern="[A-Za-z\s]+">
+          <input type="email" name="email" placeholder="Email Address" required>
+          <input type="tel" name="phone" placeholder="Phone Number">
+          <textarea name="message" placeholder="Your Message" required minlength="10" maxlength="500"></textarea>
+
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
+      <!-- ✅ RIGHT SIDE (FIXED STRUCTURE) -->
+      <div class="right">
+        <div class="info-circle">
+
+          <div class="brand">
+            <i class="fas fa-tools"></i>
+            <h3>ProServe</h3>
+          </div>
+
+          <div class="details">
+            <h5>Kalkaji, New Delhi</h5>
+            <p>📞 7370503936</p>
+            <p>✉ info@proserve.com</p>
+          </div>
+
+          
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const name = form.name.value.trim();
+  const email = form.email.value.trim();
+  const phone = form.phone.value.trim();
+  const message = form.message.value.trim();
+
+  if (!name || !email || !message) {
+    Swal.fire({ icon: 'warning', title: 'Missing Fields', text: 'Please fill all required fields' });
+    return;
+  }
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Message Sent!',
+    text: 'Thank you for contacting us. We will answer as soon as possible.',
+    confirmButtonText: 'OK',
+    customClass: {
+      popup: 'custom-popup',
+      title: 'custom-title',
+      htmlContainer: 'custom-text',
+      confirmButton: 'custom-button'
+    },
+    buttonsStyling: false
+  });
+
+  form.reset();
+});
+</script>
+</body>
