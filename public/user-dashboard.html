@@ -44,20 +44,43 @@
         }
 
         /* Navbar Logo Styling */
-.nav-logo {
-    height: 40px;
-    width: auto;
-    transform: scale(1.15);
-    transform-origin: left center;
+        .nav-logo {
+            height: 40px;
+            width: auto;
+            transform: scale(1.15);
+            transform-origin: left center;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .nav-logo {
+                height: 50px;
+                transform: scale(1);
+            }
+        }
+
+         /* Navbar Switch - Same Theme Styling */
+        .switch-link {
+    position: relative;
+    font-weight: 500;
+    transition: all 0.25s ease;
 }
 
+/* subtle underline hover effect (premium feel) */
+.switch-link::after {
+    content: '';
+    position: absolute;
+    left: 8px;
+    bottom: 4px;
+    width: 0%;
+    height: 2px;
+    background: white;
+    transition: width 0.3s ease;
+}
 
-
-@media (max-width: 768px) {
-    .nav-logo {
-        height: 50px;
-        transform: scale(1);
-    }
+.switch-link:hover::after {
+    width: 70%;
 }
 
         /* Dashboard Header */
@@ -288,7 +311,7 @@
             margin: 40px 0;
         }
 
-  
+
 
         /* Footer */
         .footer {
@@ -297,7 +320,7 @@
             padding: 50px 20px;
             margin-top: 50px;
             min-height: 220px;
-            
+
         }
 
         /* Links */
@@ -368,6 +391,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.html"><i class="fas fa-home me-1"></i> Home</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link switch-link" href="dashboard-worker.html">
+                            <i class="fas fa-sync-alt me-1"></i> Switch to Worker
+                        </a>
+                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="services.html"><i class="fas fa-concierge-bell me-1"></i> Services</a>
                     </li>
@@ -388,7 +418,7 @@
                                         class="fas fa-user-edit me-2"></i>Edit Profile</a></li>
                             <li><a class="dropdown-item hover-up" href="notification.html"><i
                                         class="fas fa-bell me-2"></i>Notifications</a></li>
-                            <li><a class="dropdown-item hover-up" href="become-provider.html"><i
+                            <li><a class="dropdown-item hover-up" href="become worker.html"><i
                                         class="fas fa-wallet me-2"></i>Become a Service Provider</a></li>
                             <li><a class="dropdown-item hover-up" href="change-password.html"><i
                                         class="fas fa-lock me-2"></i>Change Password</a></li>
@@ -708,42 +738,42 @@
         </div> -->
 
 
-        <!-- Combined Section: Provider + Support -->
-<div class="row g-4 mt-4">
+            <!-- Combined Section: Provider + Support -->
+            <div class="row g-4 mt-4">
 
-    <!-- Become Provider -->
-    <div class="col-md-6">
-        <div class="dashboard-card h-100 text-center provider-card">
-            <div class="card-icon">
-                <i class="fas fa-briefcase"></i>
-            </div>
-            <h4 class="fw-bold">Become a Service Provider</h4>
-            <p>Start earning by offering your services on ProServe platform</p>
-            <a href="signup-Worker.html" class="btn btn-primary mt-2">
-                Get Started
-            </a>
-        </div>
-    </div>
+                <!-- Become Provider -->
+                <div class="col-md-6">
+                    <div class="dashboard-card h-100 text-center provider-card">
+                        <div class="card-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h4 class="fw-bold">Become a Service Provider</h4>
+                        <p>Start earning by offering your services on ProServe platform</p>
+                        <a href="become worker.html" class="btn btn-primary mt-2">
+                            Get Started
+                        </a>
+                    </div>
+                </div>
 
-    <!-- Help & Support -->
-    <div class="col-md-6">
-        <div class="dashboard-card h-100 text-center support-card">
-            <div class="card-icon">
-                <i class="fas fa-headset"></i>
-            </div>
-            <h4 class="fw-bold">Help & Support</h4>
-            <p>We’re here to assist you anytime</p>
-            <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
-                <a href="contact.html" class="btn btn-primary">Contact</a>
-                <a href="FAQ-USER.html" class="btn btn-outline-primary">FAQ</a>
-            </div>
-        </div>
-    </div>
+                <!-- Help & Support -->
+                <div class="col-md-6">
+                    <div class="dashboard-card h-100 text-center support-card">
+                        <div class="card-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h4 class="fw-bold">Help & Support</h4>
+                        <p>We’re here to assist you anytime</p>
+                        <div class="d-flex justify-content-center gap-2 mt-2 flex-wrap">
+                            <a href="user-support.html" class="btn btn-primary">Contact</a>
+                            <a href="FAQ-USER.html" class="btn btn-outline-primary">FAQ</a>
+                        </div>
+                    </div>
+                </div>
 
-</div>
+            </div>
 
             <!-- Become a Service Provider -->
-          <!--  <section class="cta-section">
+            <!--  <section class="cta-section">
                 <div class="container text-center py-4">
                     <h2 class="fw-bold mb-3">Ready to Get Started?</h2>
                     <p class="lead mb-4">Join thousands of satisfied customers and service providers</p>
@@ -774,75 +804,75 @@
     </div>
     </div> -->
 
-    <!-- FOOTER -->
-    <footer class="footer" id="footer">
-        <div class="container">
+            <!-- FOOTER -->
+            <footer class="footer" id="footer">
+                <div class="container">
 
-            <div class="row g-4 align-items-center">
+                    <div class="row g-4 align-items-center">
 
-                <!-- LEFT -->
-                <div class="col-lg-4 text-center text-lg-start">
-                    <h5 class="fw-bold mb-3">
-                        <i class="fas fa-tools me-2"></i>ProServe
-                    </h5>
-                    <p class="text-white-50">
-                        Connecting you with trusted professionals for all your home service needs.
-                    </p>
+                        <!-- LEFT -->
+                        <div class="col-lg-4 text-center text-lg-start">
+                            <h5 class="fw-bold mb-3">
+                                <i class="fas fa-tools me-2"></i>ProServe
+                            </h5>
+                            <p class="text-white-50">
+                                Connecting you with trusted professionals for all your home service needs.
+                            </p>
 
-                    <div class="social-icons d-flex justify-content-center justify-content-lg-start gap-3">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <div class="social-icons d-flex justify-content-center justify-content-lg-start gap-3">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- CENTER LOGO -->
+                        <div class="col-lg-4 text-center">
+                            <img src="ProServe logo.png" alt="ProServe Logo" class="footer-logo">
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div class="col-lg-4 text-center text-lg-end">
+                            <h5 class="fw-bold text-white mb-3">Contact Us</h5>
+                            <ul class="list-unstyled text-white-50">
+                                <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Kalkaji, New Delhi</li>
+                                <li class="mb-2"><i class="fas fa-phone me-2"></i>7370503936</li>
+                                <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@proserve.com</li>
+                            </ul>
+                        </div>
+
                     </div>
+
+                    <hr class="my-4 border-light">
+
+                    <!-- BOTTOM -->
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center text-md-start">
+                            <p class="text-white-50 mb-0">&copy; 2026 ProServe. All rights reserved.</p>
+                        </div>
+
+                        <div class="col-md-6 text-center text-md-end">
+                            <a href="about.html" class="text-white-50 text-decoration-none me-3">About Us</a>
+                            <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
+                            <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
+                        </div>
+                    </div>
+
                 </div>
-
-                <!-- CENTER LOGO -->
-                <div class="col-lg-4 text-center">
-                    <img src="ProServe logo.png" alt="ProServe Logo" class="footer-logo">
-                </div>
-
-                <!-- RIGHT -->
-                <div class="col-lg-4 text-center text-lg-end">
-                    <h5 class="fw-bold text-white mb-3">Contact Us</h5>
-                    <ul class="list-unstyled text-white-50">
-                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i>Kalkaji, New Delhi</li>
-                        <li class="mb-2"><i class="fas fa-phone me-2"></i>7370503936</li>
-                        <li class="mb-2"><i class="fas fa-envelope me-2"></i>info@proserve.com</li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <hr class="my-4 border-light">
-
-            <!-- BOTTOM -->
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="text-white-50 mb-0">&copy; 2026 ProServe. All rights reserved.</p>
-                </div>
-
-                <div class="col-md-6 text-center text-md-end">
-                    <a href="about.html" class="text-white-50 text-decoration-none me-3">About Us</a>
-                    <a href="#" class="text-white-50 text-decoration-none me-3">Privacy Policy</a>
-                    <a href="#" class="text-white-50 text-decoration-none">Terms of Service</a>
-                </div>
-            </div>
-
-        </div>
-    </footer>
+            </footer>
 
 
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Bootstrap JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const name = localStorage.getItem("ps_name") || "User";
-            document.getElementById("helloUser").innerText = "Hello, " + name + "👋";
-        });
-    </script>
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const name = localStorage.getItem("ps_name") || "User";
+                    document.getElementById("helloUser").innerText = "Hello, " + name + "👋";
+                });
+            </script>
 
 
 </body>
