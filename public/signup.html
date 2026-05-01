@@ -285,26 +285,7 @@
                 <div class="invalid-feedback">Passwords do not match</div>
             </div>
 
-            <!-- CAPTCHA - Single Row with Case Sensitivity -->
-            <div class="captcha-row">
-                <div class="captcha-display">
-                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block; font-size: 0.9rem;">Captcha Code</label>
-                    <div class="captcha-container">
-                        <span id="captchaCode"></span>
-                        <button type="button" class="captcha-refresh" onclick="generateCaptcha()" title="Refresh">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
-                    </div>
-                    <div class="captcha-note">Case Sensitive (AaBbCc)</div>
-                </div>
-                <div class="captcha-input-container">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="captchaInput" placeholder="Enter code" maxlength="6" required>
-                        <label for="captchaInput">Enter code exactly</label>
-                        <div class="invalid-feedback">Enter exact code (case sensitive)</div>
-                    </div>
-                </div>
-            </div>
+            
 
             <!-- Terms -->
             <div class="form-check">
@@ -328,24 +309,10 @@
     </div>
 
     <script>
-        let currentCaptcha = '';
+        
 
-        // Generate CAPTCHA - Now generates mixed case
-        function generateCaptcha() {
-            const upperChars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-            const lowerChars = 'abcdefghjklmnpqrstuvwxyz';
-            const numbers = '23456789';
-            const allChars = upperChars + lowerChars + numbers;
-            
-            currentCaptcha = '';
-            for (let i = 0; i < 6; i++) {
-                currentCaptcha += allChars.charAt(Math.floor(Math.random() * allChars.length));
-            }
-            document.getElementById('captchaCode').textContent = currentCaptcha;
-            document.getElementById('captchaInput').value = '';
-        }
 
-        // Updated CAPTCHA Validation - Case Sensitive
+        // Updated Validation - Case Sensitive
         function validateField(fieldId) {
             const field = document.getElementById(fieldId);
             const feedback = field.parentNode.querySelector('.invalid-feedback');
@@ -370,11 +337,6 @@
                     
                 case 'signupPassword':
                     valid = value.length >= 6;
-                    break;
-                    
-                case 'captchaInput':
-                    // CASE SENSITIVE - Exact match required
-                    valid = value === currentCaptcha;
                     break;
             }
 
@@ -404,10 +366,10 @@
 
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
-            generateCaptcha();
+            
             
             // Field validation
-            ['signupName','signupEmail','signupPhone','signupPassword','captchaInput'].forEach(id => {
+            ['signupName','signupEmail','signupPhone','signupPassword'].forEach(id => {
                 const field = document.getElementById(id);
                 field.addEventListener('blur', () => validateField(id));
                 field.addEventListener('input', () => {
@@ -425,7 +387,7 @@
 
             // Validate all
             let isValid = true;
-            ['signupName','signupEmail','signupPhone','signupPassword','captchaInput'].forEach(id => {
+            ['signupName','signupEmail','signupPhone','signupPassword'].forEach(id => {
                 if (!document.getElementById(id).value.trim() || !validateField(id)) isValid = false;
             });
             
