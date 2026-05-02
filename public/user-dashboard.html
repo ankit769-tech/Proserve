@@ -270,7 +270,7 @@
             font-size: 0.9rem;
         }
 
-        /* Service Categories */
+/* Service Categories */
         .category-card {
             text-align: center;
             padding: 15px;
@@ -289,6 +289,28 @@
             font-size: 2rem;
             margin-bottom: 10px;
             color: var(--primary);
+        }
+
+        /* Service Card - Popular Services */
+        .service-card {
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+            padding: 10px;
+            background: white;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .service-card img {
+            height: 170px;
+            object-fit: cover;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
         }
 
         /* Responsive Adjustments */
@@ -511,12 +533,12 @@
 
 
 
-            <!-- Quick Actions -->
+<!-- Quick Actions -->
             <div class="section-header">
                 <h2 class="section-title"><i class="fas fa-bolt me-2"></i>Quick Actions</h2>
             </div>
 
-            <div class="quick-row mb-4">
+<div class="quick-row mb-4">
 
                 <div class="quick-col">
                     <a href="service-listing.html" class="text-decoration-none">
@@ -529,11 +551,11 @@
                 </div>
 
                 <div class="quick-col">
-                    <a href="booking.html" class="text-decoration-none">
+                    <a href="#" class="text-decoration-none" onclick="showCartModal(); return false;">
                         <div class="dashboard-card text-center">
                             <div class="card-icon"><i class="fas fa-calendar-plus"></i></div>
                             <h5 class="card-title">Book Now</h5>
-                            <p class="card-description">Schedule service</p>
+                            <p class="card-description">Cart Items <span class="badge bg-danger" id="quickCartBadge">0</span></p>
                         </div>
                     </a>
                 </div>
@@ -570,6 +592,48 @@
                     </a>
                 </div>
 
+            </div>
+
+            <!-- Cart Section (Flipkart-style) -->
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-shopping-cart me-2"></i>My Cart</h2>
+                <span class="badge bg-danger" id="cartCountBadge">0</span>
+            </div>
+
+            <div id="cartContainer">
+                <!-- Cart items will be loaded here dynamically -->
+            </div>
+
+            <div id="cartEmpty" class="dashboard-card text-center py-5">
+                <div class="card-icon text-muted">
+                    <i class="fas fa-shopping-cart fa-3x"></i>
+                </div>
+                <h5 class="mt-3">Your Cart is Empty</h5>
+                <p class="text-muted">Add services to your cart from the homepage or services page.</p>
+                <a href="index.html" class="btn btn-primary mt-2">
+                    <i class="fas fa-search me-1"></i> Browse Services
+                </a>
+            </div>
+
+            <div id="cartItems" class="row g-3" style="display: none;">
+                <!-- Cart items will be dynamically inserted here -->
+            </div>
+
+            <div id="cartSummary" class="dashboard-card mt-3" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">Total: <span id="cartTotal" class="text-primary fw-bold">₹0</span></h5>
+                        <small class="text-muted"><span id="cartItemCount">0</span> service(s) in cart</small>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-danger me-2" onclick="clearCart()">
+                            <i class="fas fa-trash me-1"></i> Clear
+                        </button>
+                        <a href="booking.html" class="btn btn-success">
+                            <i class="fas fa-checkout me-1"></i> Proceed to Book
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <!-- Upcoming Bookings -->
@@ -624,7 +688,7 @@
             </div>
 
 
-            <!-- Recent Activity -->
+<!-- Recent Activity -->
             <div class="section-header">
                 <h2 class="section-title"><i class="fas fa-history me-2"></i>Recent Activity</h2>
                 <a href="#" class="view-all">View All <i class="fas fa-chevron-right ms-1"></i></a>
@@ -677,6 +741,9 @@
                     </li>
                 </ul>
             </div>
+
+
+<!-- Popular Services
 
 
             <!-- Popular Services
@@ -864,14 +931,202 @@
 
 
 
-            <!-- Bootstrap JS -->
+<!-- Bootstrap JS -->
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-            <script>
+<script>
                 document.addEventListener("DOMContentLoaded", () => {
                     const name = localStorage.getItem("ps_name") || "User";
                     document.getElementById("helloUser").innerText = "Hello, " + name + "👋";
+                    
+                    // Load cart items and update badges
+                    loadCart();
+                    updateQuickCartBadge();
                 });
+                
+                // Show Cart Modal - displays cart items in a modal
+                function showCartModal() {
+                    const cart = JSON.parse(localStorage.getItem('proserve_cart')) || [];
+                    
+                    if (cart.length === 0) {
+                        // Show empty cart modal
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Your Cart is Empty',
+                            text: 'Add services to your cart from the Explore page.',
+                            confirmButtonColor: '#0d6efd'
+                        });
+                        return;
+                    }
+                    
+                    // Calculate total
+                    let total = 0;
+                    cart.forEach(item => {
+                        total += parseInt(item.price);
+                    });
+                    
+                    // Build cart items HTML
+                    let itemsHTML = '';
+                    cart.forEach((item, index) => {
+                        itemsHTML += `
+                            <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                                <img src="${item.image}" alt="${item.name}" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">${item.name}</h6>
+                                    <small class="text-muted">${item.desc}</small>
+                                </div>
+                                <div class="text-end">
+                                    <div class="text-primary fw-bold">₹${parseInt(item.price).toLocaleString()}</div>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="removeFromCart(${index}); showCartModal();">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    // Show modal with cart items
+                    Swal.fire({
+                        title: 'My Cart <span class="badge bg-danger">' + cart.length + '</span>',
+                        html: `
+                            <div class="text-start">
+                                ${itemsHTML}
+                                <div class="mt-3 pt-3 border-top">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="mb-0">Total:</h5>
+                                        <h5 class="mb-0 text-primary">₹${total.toLocaleString()}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Proceed to Book',
+                        confirmButtonColor: '#198754',
+                        cancelButtonText: 'Continue Shopping',
+                        width: '600px'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Go to booking page
+                            window.location.href = 'booking.html';
+                        }
+                    });
+                }
+                
+                // Update quick cart badge
+                function updateQuickCartBadge() {
+                    const cart = JSON.parse(localStorage.getItem('proserve_cart')) || [];
+                    const quickCartBadge = document.getElementById('quickCartBadge');
+                    if (quickCartBadge) {
+                        quickCartBadge.textContent = cart.length;
+                    }
+                }
+                
+                // Load and display cart items
+                function loadCart() {
+                    const cart = JSON.parse(localStorage.getItem('proserve_cart')) || [];
+                    const cartEmpty = document.getElementById('cartEmpty');
+                    const cartItems = document.getElementById('cartItems');
+                    const cartSummary = document.getElementById('cartSummary');
+                    const cartCountBadge = document.getElementById('cartCountBadge');
+                    const cartTotal = document.getElementById('cartTotal');
+                    const cartItemCount = document.getElementById('cartItemCount');
+                    
+                    // Update badge count
+                    cartCountBadge.textContent = cart.length;
+                    
+                    if (cart.length === 0) {
+                        // Show empty state
+                        cartEmpty.style.display = 'block';
+                        cartItems.style.display = 'none';
+                        cartSummary.style.display = 'none';
+                    } else {
+                        // Hide empty state
+                        cartEmpty.style.display = 'none';
+                        cartItems.style.display = 'grid';
+                        cartSummary.style.display = 'block';
+                        
+                        // Calculate total
+                        let total = 0;
+                        cart.forEach(item => {
+                            total += parseInt(item.price);
+                        });
+                        
+                        // Update totals
+                        cartTotal.textContent = '₹' + total.toLocaleString();
+                        cartItemCount.textContent = cart.length;
+                        
+                        // Generate cart items HTML
+                        let itemsHTML = '';
+                        cart.forEach((item, index) => {
+                            itemsHTML += `
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="dashboard-card h-100">
+                                        <div class="d-flex align-items-start">
+                                            <img src="${item.image}" alt="${item.name}" class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-1">${item.name}</h6>
+                                                <p class="text-primary fw-bold mb-1">₹${parseInt(item.price).toLocaleString()}</p>
+                                                <button class="btn btn-sm btn-outline-danger" onclick="removeFromCart(${index})">
+                                                    <i class="fas fa-trash me-1"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        
+                        cartItems.innerHTML = itemsHTML;
+                    }
+                }
+                
+                // Remove item from cart
+                function removeFromCart(index) {
+                    let cart = JSON.parse(localStorage.getItem('proserve_cart')) || [];
+                    const removedItem = cart[index];
+                    
+                    // Remove from array
+                    cart.splice(index, 1);
+                    localStorage.setItem('proserve_cart', JSON.stringify(cart));
+                    
+                    // Show notification
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Removed from Cart',
+                        text: removedItem.name + ' has been removed from your cart.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    
+                    // Reload cart
+                    loadCart();
+                }
+                
+                // Clear entire cart
+                function clearCart() {
+                    Swal.fire({
+                        title: 'Clear Cart?',
+                        text: 'Are you sure you want to remove all items from your cart?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc3545',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Yes, clear all!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            localStorage.removeItem('proserve_cart');
+                            loadCart();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Cart Cleared',
+                                text: 'All items have been removed from your cart.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
             </script>
 
 
