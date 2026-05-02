@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - ProServe</title>
+
+<!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background: #f5f7fa;
+        }
+
+        .hero {
+            background: #0d6efd;
+            color: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+        }
+
+.service-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transition: 0.3s;
+            position: relative;
+        }
+        .service-card:hover {
+            transform: scale(1.03);
+        }
+        .service-img {
+            border-radius: 10px;
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+        }
+        
+        /* Wishlist/Heart Button */
+        .wishlist-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            color: #dc3545;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .wishlist-btn:hover {
+            transform: scale(1.1);
+            background: #dc3545;
+            color: white;
+        }
+        .wishlist-btn.active {
+            background: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-primary px-4">
+    <a href="index.html" class="navbar-brand fw-bold">ProServe</a>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- HERO SEARCH -->
+    <div class="hero mb-4">
+        <h2 class="fw-bold">Find Services Near You</h2>
+        <p>Electricians, Plumbers, Carpenters & more...</p>
+
+        <div class="row mt-4">
+            <div class="col-md-10">
+<input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Search for services..." onkeyup="performSearch()">
+            </div>
+            <div class="col-md-2">
+<button class="btn btn-light btn-lg w-100" onclick="performSearch()">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <select class="form-select">
+                <option selected>Sort by Price</option>
+                <option>Low to High</option>
+                <option>High to Low</option>
+            </select>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <select class="form-select">
+                <option selected>Rating</option>
+                <option>4★ and above</option>
+                <option>3★ and above</option>
+            </select>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <select class="form-select">
+                <option selected>Category</option>
+                <option>Electrician</option>
+                <option>Plumber</option>
+                <option>Carpenter</option>
+                <option>Cleaning</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- SERVICE LIST -->
+    <div class="row">
+
+<!-- Card 1 -->
+        <div class="col-md-4 mb-4" id="serviceCard1">
+            <div class="service-card">
+                <button class="wishlist-btn" onclick="addToCart('cleaning', 'Home Cleaning', '400', 'https://images.unsplash.com/photo-1581578731548-c64695cc6952', this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952" class="service-img" alt="">
+                <h5 class="mt-3 fw-bold">Home Cleaning</h5>
+                <p class="text-muted">Professional home cleaning services</p>
+                <button class="btn btn-primary w-100" onclick="location.href='service-details.html'">
+                    View Details
+                </button>
+            </div>
+        </div>
+
+<!-- Card 2 -->
+        <div class="col-md-4 mb-4" id="serviceCard2">
+            <div class="service-card">
+                <button class="wishlist-btn" onclick="addToCart('carpenter', 'Carpenter (Furniture & repair)', '500', 'https://images.unsplash.com/photo-1503387762-592deb58ef4e', this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e" class="service-img" alt="">
+                <h5 class="mt-3 fw-bold" data-name="Carpenter">Carpenter (Furniture & repair)</h5>
+                <p class="text-muted" data-desc="Expert furniture repair & installation">Expert furniture repair & installation</p>
+                <button class="btn btn-primary w-100" onclick="location.href='service-details.html'">
+                    View Details
+                </button>
+            </div>
+        </div>
+
+<!-- Card 3 -->
+        <div class="col-md-4 mb-4" id="serviceCard3">
+            <div class="service-card">
+                <button class="wishlist-btn" onclick="addToCart('painter', 'Painter', '600', 'https://images.unsplash.com/photo-1562259949-e8e7689d7828', this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828" class="service-img" alt="">
+                <h5 class="mt-3 fw-bold">Painter</h5>
+                <p class="text-muted">Professional interior & exterior painting</p>
+                <button class="btn btn-primary w-100" onclick="location.href='service-details.html'">
+                    View Details
+                </button>
+            </div>
+        </div>
+
+<!-- Card 4 -->
+        <div class="col-md-4 mb-4" id="serviceCard4">
+            <div class="service-card">
+                <button class="wishlist-btn" onclick="addToCart('electric', 'Electric Repair', '300', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4', this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4" class="service-img" alt="">
+                <h5 class="mt-3 fw-bold">Electric Repair</h5>
+                <p class="text-muted">Certified electricians for all repairs</p>
+                <button class="btn btn-primary w-100" onclick="location.href='service-details.html'">
+                    View Details
+                </button>
+            </div>
+        </div>
+
+<!-- Card 5 -->
+        <div class="col-md-4 mb-4" id="serviceCard5">
+            <div class="service-card">
+                <button class="wishlist-btn" onclick="addToCart('plumbing', 'Plumbing', '450', 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39', this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39" class="service-img" alt="">
+                <h5 class="mt-3 fw-bold">Plumbing</h5>
+                <p class="text-muted">Expert plumbing & pipe repair services</p>
+                <button class="btn btn-primary w-100" onclick="location.href='service-details.html'">
+                    View Details
+                </button>
+            </div>
+        </div>
+
+<!-- Card 6 -->
+        <div class="col-md-4 mb-4" id="serviceCard6">
+            <div class="service-card">
+                <button class="wishlist-btn" onclick="addToCart('teacher', 'Teacher (Home tuition)', '1000', 'https://images.unsplash.com/photo-1588072432836-e10032774350', this)">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <img src="https://images.unsplash.com/photo-1588072432836-e10032774350" class="service-img" alt="">
+                <h5 class="mt-3 fw-bold">Teacher (Home tuition)</h5>
+                <p class="text-muted">Qualified tutors for home tuition</p>
+                <button class="btn btn-primary w-100" onclick="location.href='service-details.html'">
+                    View Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Not Available Message -->
+        <div id="notAvailable" class="col-12 text-center" style="display: none;">
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">Not Available</h4>
+                <p class="mb-0">No services match your search. Please try different keywords.</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="/js/api.js"></script>
+
+<script>
+    function performSearch() {
+        // Get search query
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        
+        // Service cards data
+        const services = [
+            { id: 'serviceCard1', name: 'Home Cleaning', desc: 'Professional home cleaning services' },
+            { id: 'serviceCard2', name: 'Carpenter', desc: 'Expert furniture repair & installation' },
+            { id: 'serviceCard3', name: 'Painter', desc: 'Professional interior & exterior painting' },
+            { id: 'serviceCard4', name: 'Electric Repair', desc: 'Certified electricians for all repairs' },
+            { id: 'serviceCard5', name: 'Plumbing', desc: 'Expert plumbing & pipe repair services' },
+            { id: 'serviceCard6', name: 'Teacher', desc: 'Qualified tutors for home tuition' }
+        ];
+        
+        let matchCount = 0;
+        
+        // Loop through each service
+        services.forEach(service => {
+            const card = document.getElementById(service.id);
+            if (card) {
+                // Check if name or description contains the query
+                const nameMatch = service.name.toLowerCase().includes(query);
+                const descMatch = service.desc.toLowerCase().includes(query);
+                
+                if (query === '' || nameMatch || descMatch) {
+                    // Show the card - use proper Bootstrap display
+                    card.style.display = 'block';
+                    matchCount++;
+                } else {
+                    // Hide the card
+                    card.style.display = 'none';
+                }
+            }
+        });
+        
+        // Show/hide "Not Available" message
+        const notAvailableMsg = document.getElementById('notAvailable');
+        if (matchCount === 0 && query !== '') {
+            notAvailableMsg.style.display = 'block';
+        } else {
+            notAvailableMsg.style.display = 'none';
+        }
+    }
+    
+    // Add to Cart / Wishlist Function
+    function addToCart(serviceId, serviceName, servicePrice, serviceImage, btnElement) {
+        // Get existing cart from localStorage
+        let cart = JSON.parse(localStorage.getItem('proserve_cart')) || [];
+        
+        // Check if service already in cart
+        const existingIndex = cart.findIndex(item => item.id === serviceId);
+        
+        if (existingIndex > -1) {
+            // Remove from cart (toggle off)
+            cart.splice(existingIndex, 1);
+            localStorage.setItem('proserve_cart', JSON.stringify(cart));
+            
+            // Update button state
+            if (btnElement) {
+                btnElement.classList.remove('active');
+            }
+            
+            // Show removed message
+            Swal.fire({
+                icon: 'info',
+                title: 'Removed from Cart',
+                text: serviceName + ' has been removed from your cart.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } else {
+            // Add to cart
+            cart.push({
+                id: serviceId,
+                name: serviceName,
+                price: servicePrice,
+                image: serviceImage
+            });
+            localStorage.setItem('proserve_cart', JSON.stringify(cart));
+            
+            // Update button state
+            if (btnElement) {
+                btnElement.classList.add('active');
+            }
+            
+            // Show success message - Flipkart style
+            Swal.fire({
+                icon: 'success',
+                title: 'Added to Cart',
+                text: serviceName + ' has been added to your cart!',
+                timer: 2000,
+                showConfirmButton: false,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
+        }
+    }
+</script>
+
+
+</body>
+</html>
