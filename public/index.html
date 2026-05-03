@@ -136,6 +136,11 @@
 
      
     }
+    .highlight {
+  border: 3px solid #0d6efd;
+  box-shadow: 0 0 15px rgba(13,110,253,0.6);
+  transform: scale(1.05);
+}
 
     /* Emoji Category Icons */
     .cat-emoji {
@@ -397,16 +402,20 @@
   <section class="hero">
     <h1>Professional Services at Your Doorstep</h1>
     <p class="mt-2">Teachers · Cooks · Electricians · Drivers · Cleaners & More</p>
+    
 
     <div class="search-box">
       <div class="input-group">
-        <input type="text" class="form-control form-control-lg"
-          placeholder="Search services (e.g., electrician, plumber)">
-        <button class="btn btn-light" type="button">
-          <i class="fas fa-search"></i>
-        </button>
+        <input type="text" id="searchInput" onkeyup="searchService()"
+  class="form-control form-control-lg"
+  placeholder="Search services">
+  <button class="btn btn-light" type="button" onclick="searchService()">
+  <i class="fas fa-search"></i>
+</button>
+        
       </div>
     </div>
+    <div id="searchResults" class="container mt-3"></div>
   </section>
 
   <!-- TOP CATEGORIES (EMOJI VERSION) -->
@@ -583,7 +592,8 @@
             <div class="service-group">
 
               <!-- CARD 1 -->
-              <div class="card service-card">
+              
+                <div class="card service-card" data-name="home cleaning cleaning housemaid safai">
                 <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952" class="card-img-top">
                 <div class="card-body">
                   <h5>Home Cleaning</h5>
@@ -593,7 +603,7 @@
               </div>
 
               <!-- NEW: CARPENTER -->
-              <div class="card service-card">
+                <div class="card service-card" data-name="carpenter furniture wood">
                 <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e" class="card-img-top">
                 <div class="card-body">
                   <h5>Carpenter (Furniture & repair)</h5>
@@ -603,9 +613,9 @@
               </div>
 
               <!-- NEW: PAINTER -->
-              <div class="card service-card">
+                <div class="card service-card" data-name="painter paint wall">
                 <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828" class="card-img-top">
-                <div class="card-body">
+                <div class="card-body"> 
                   <h5>Painter</h5>
                   <p class="text-muted">Starting ₹600</p>
                   <a href="Service_details.html?service=painter" class="btn btn-primary btn-sm">Book Now</a>
@@ -619,7 +629,7 @@
             <div class="service-group">
 
                <!-- CARD 2 -->
-              <div class="card service-card">
+              <div class="card service-card" data-name="electric electrician repair">
                 <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4" class="card-img-top">
                 <div class="card-body">
                   <h5>Electric Repair</h5>
@@ -629,7 +639,7 @@
               </div>
 
               <!-- CARD 3 -->
-              <div class="card service-card">
+                <div class="card service-card" data-name="plumber plumbing pipe water">
                 <img src="https://images.unsplash.com/photo-1607472586893-edb57bdc0e39" class="card-img-top">
                 <div class="card-body">
                   <h5>Plumbing</h5>
@@ -640,7 +650,7 @@
 
 
               <!-- NEW: TEACHER -->
-              <div class="card service-card">
+               <div class="card service-card" data-name="teacher tuition study">
                 <img src="https://images.unsplash.com/photo-1588072432836-e10032774350" class="card-img-top">
                 <div class="card-body">
                   <h5>Teacher (Home tuition)</h5>
@@ -947,7 +957,75 @@
 
 
   </script>
+ <script>
 
+function searchService() {
+  let input = document.getElementById("searchInput").value.toLowerCase().trim();
+  let resultBox = document.getElementById("searchResults");
+
+  resultBox.innerHTML = "";
+
+  if (input === "") return;
+
+  // ORIGINAL cards ko fixed list ki tarah treat karo
+  let cards = Array.from(document.querySelectorAll(".service-card"));
+
+  let matches = [];
+
+  cards.forEach(card => {
+    let name = (card.getAttribute("data-name") || "").toLowerCase();
+
+    // strict matching improvement (avoid noisy partial duplicates)
+    if (name.includes(input)) {
+      matches.push(card);
+    }
+  });
+
+  // REMOVE duplicate cards (important fix)
+  let uniqueMatches = [];
+  let seen = new Set();
+
+  matches.forEach(card => {
+    let title = card.querySelector("h5")?.innerText || "";
+    if (!seen.has(title)) {
+      seen.add(title);
+      uniqueMatches.push(card);
+    }
+  });
+
+  if (uniqueMatches.length === 0) {
+    resultBox.innerHTML = `
+      <div class="text-center mt-3">
+        <div class="alert alert-danger shadow-sm fw-semibold">
+          Service Not Available ❌
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // Professional UI grid (same card design maintained)
+  let html = `
+    <div class="container mt-3">
+      <div class="row g-4">
+  `;
+
+  uniqueMatches.forEach(card => {
+    html += `
+      <div class="col-12 col-sm-6 col-md-4">
+        ${card.outerHTML}
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  resultBox.innerHTML = html;
+}
+ </script>
   <script src="/js/api.js"></script>
 
 
